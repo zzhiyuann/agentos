@@ -1,4 +1,7 @@
 import { describe, it, expect } from 'vitest';
+import { existsSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 import {
   getReadClient, getIssue, addComment, getWorkflowStateId,
   hasAgentAccess, createAgentSession, emitActivity, dismissAgentSession,
@@ -12,6 +15,10 @@ const AGENT_SESSION_TEST_ISSUE_KEY = process.env.AOS_INTEGRATION_AGENT_SESSION_I
 const describeAgentSessionLifecycle = AGENT_SESSION_TEST_ISSUE_KEY ? describe : describe.skip;
 
 const describeLinear = process.env.AOS_LIVE_TESTS === '1' ? describe : describe.skip;
+
+// Tests that require a full AgentOS deployment (agents dir, routing, shared memory)
+const hasDeployedAgents = existsSync(join(homedir(), '.aos', 'agents'));
+const describeDeployed = hasDeployedAgents ? describe : describe.skip;
 
 describeLinear('Integration: Linear API operations', () => {
   it('reads a real issue from Linear', async () => {
@@ -36,7 +43,7 @@ describeLinear('Integration: Linear API operations', () => {
   });
 });
 
-describe('Integration: Per-agent OAuth tokens', () => {
+describeDeployed('Integration: Per-agent OAuth tokens', () => {
   const roles = ['cto', 'cpo', 'coo', 'lead-engineer', 'research-lead'];
 
   for (const role of roles) {
@@ -101,7 +108,7 @@ describeAgentSessionLifecycle('Integration: Agent session lifecycle', () => {
   });
 });
 
-describe('Integration: Workspace mapping', () => {
+describeDeployed('Integration: Workspace mapping', () => {
   it('resolves AgentOS project to agentos repo', () => {
     const workspace = resolveWorkspace('ENG-99', 'AgentOS');
     expect(workspace).toContain('projects/agentos');
@@ -120,7 +127,7 @@ describe('Integration: Workspace mapping', () => {
   });
 });
 
-describe('Integration: System config consistency', () => {
+describeDeployed('Integration: System config consistency', () => {
   it('all 6 agents exist', () => {
     const agents = listAgents();
     expect(agents).toHaveLength(6);
