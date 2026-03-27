@@ -1,6 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { existsSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 import { getAgentRegistry, resolveAgentType, resolveAgentRole, getAgentDefinition, canSpawnAgent } from './router.js';
 import type { LinearIssueInfo } from '../types.js';
+
+// Routing tests that depend on ~/.aos/routing.json and agent configs
+const hasDeployedConfig = existsSync(join(homedir(), '.aos', 'routing.json'));
+const describeDeployed = hasDeployedConfig ? describe : describe.skip;
 
 const TEST_ENV = {
   AOS_LINEAR_TEAM_ID: 'test-team-uuid',
@@ -55,7 +62,7 @@ describe('getAgentRegistry', () => {
   });
 });
 
-describe('resolveAgentRole', () => {
+describeDeployed('resolveAgentRole', () => {
   it('routes label:ops to coo', () => {
     const issue = makeIssue(['ops']);
     expect(resolveAgentRole(issue)).toBe('coo');
@@ -77,7 +84,7 @@ describe('resolveAgentRole', () => {
   });
 });
 
-describe('resolveAgentType', () => {
+describeDeployed('resolveAgentType', () => {
   it('resolves agent:cc label to cc', () => {
     const issue = makeIssue(['agent:cc']);
     const result = resolveAgentType(issue);

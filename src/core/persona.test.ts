@@ -1,11 +1,18 @@
 import { describe, it, expect } from 'vitest';
+import { existsSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 import {
   listAgents, agentExists, loadPersona, loadAgentConfig,
   getAgentLinearToken, buildGroundingPrompt, buildTaskPrompt,
   buildWorkerPersona, getAgentsDir,
 } from './persona.js';
 
-describe('listAgents', () => {
+// All persona tests require ~/.aos/agents/ directory with agent configs
+const hasDeployedAgents = existsSync(join(homedir(), '.aos', 'agents'));
+const describeDeployed = hasDeployedAgents ? describe : describe.skip;
+
+describeDeployed('listAgents', () => {
   it('returns array of agent role names', () => {
     const agents = listAgents();
     expect(Array.isArray(agents)).toBe(true);
@@ -19,7 +26,7 @@ describe('listAgents', () => {
   });
 });
 
-describe('agentExists', () => {
+describeDeployed('agentExists', () => {
   it('returns true for existing agents', () => {
     expect(agentExists('cto')).toBe(true);
     expect(agentExists('cpo')).toBe(true);
@@ -32,7 +39,7 @@ describe('agentExists', () => {
   });
 });
 
-describe('loadAgentConfig', () => {
+describeDeployed('loadAgentConfig', () => {
   it('loads config with baseModel', () => {
     const config = loadAgentConfig('cto');
     expect(config.baseModel).toBe('cc');
@@ -67,7 +74,7 @@ describe('loadAgentConfig', () => {
   });
 });
 
-describe('getAgentLinearToken', () => {
+describeDeployed('getAgentLinearToken', () => {
   it('returns token for agents with OAuth tokens', () => {
     const token = getAgentLinearToken('cto');
     expect(token).not.toBeNull();
@@ -81,7 +88,7 @@ describe('getAgentLinearToken', () => {
   });
 });
 
-describe('loadPersona', () => {
+describeDeployed('loadPersona', () => {
   it('loads full persona for CTO', () => {
     const persona = loadPersona('cto');
     expect(persona.role).toBe('cto');
@@ -114,7 +121,7 @@ describe('loadPersona', () => {
   });
 });
 
-describe('buildGroundingPrompt', () => {
+describeDeployed('buildGroundingPrompt', () => {
   it('includes persona CLAUDE.md content', () => {
     const persona = loadPersona('cto');
     const prompt = buildGroundingPrompt(persona);
@@ -141,7 +148,7 @@ describe('buildGroundingPrompt', () => {
   });
 });
 
-describe('buildTaskPrompt', () => {
+describeDeployed('buildTaskPrompt', () => {
   it('includes issue key and title', () => {
     const prompt = buildTaskPrompt('cto', 'ENG-42', 'Fix the auth bug', 'Users cannot login');
     expect(prompt).toContain('ENG-42');
@@ -157,7 +164,7 @@ describe('buildTaskPrompt', () => {
   });
 });
 
-describe('buildWorkerPersona', () => {
+describeDeployed('buildWorkerPersona', () => {
   it('creates minimal persona for ephemeral workers', () => {
     const persona = buildWorkerPersona('ENG-99', 'Test task', 'Do something');
     expect(persona).toContain('Worker Agent');

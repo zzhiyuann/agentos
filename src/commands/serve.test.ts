@@ -1,5 +1,24 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { createHmac } from 'crypto';
+
+// Mock persona so AGENT_ROLE_REGEX works without ~/.aos/agents/ directory
+vi.mock('../core/persona.js', () => ({
+  listAgents: () => ['ceo-office', 'coo', 'cpo', 'cto', 'lead-engineer', 'research-lead'],
+  buildAgentRoleRegex: () => /@(cto|cpo|coo|lead-?engineer|research-?lead|ceo-?office)\b/i,
+  normalizeAgentRole: (captured: string) => {
+    const stripped = captured.toLowerCase().replace(/[\s-]/g, '');
+    const map: Record<string, string> = {
+      cto: 'cto', cpo: 'cpo', coo: 'coo',
+      leadengineer: 'lead-engineer', researchlead: 'research-lead', ceooffice: 'ceo-office',
+    };
+    return map[stripped] || captured.toLowerCase();
+  },
+  agentExists: () => true,
+  loadAgentConfig: () => ({ baseModel: 'cc' }),
+  getAgentLinearToken: () => null,
+  getAgentsDir: () => '/tmp/test-agents',
+}));
+
 import {
   classifyEvent, routeEvent, countConsecutiveRateLimitFailures, getRateLimitBackoffMs,
   verifyWebhookSignature,

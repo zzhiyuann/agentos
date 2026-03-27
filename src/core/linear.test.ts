@@ -1,10 +1,19 @@
 import { describe, it, expect } from 'vitest';
+import { existsSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 import {
   getReadClient, getAgentClient, hasAgentAccess,
   getIssue, getWorkflowStateId,
 } from './linear.js';
 
-describe('Linear clients', () => {
+// These tests require a deployed AgentOS with Linear API key — skip in CI
+const hasDeployedConfig = existsSync(join(homedir(), '.aos', '.linear-api-key')) ||
+  existsSync(join(homedir(), '.aos', 'agents'));
+
+const describeWithApiKey = hasDeployedConfig ? describe : describe.skip;
+
+describeWithApiKey('Linear clients', () => {
   it('getReadClient returns a LinearClient', () => {
     const client = getReadClient();
     expect(client).toBeDefined();
