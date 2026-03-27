@@ -1,0 +1,33 @@
+node_modules/
+dist/
+*.js.map
+*.d.ts
+.DS_Store
+
+# AgentOS runtime state
+.aos/
+.agent-memory
+.agent-memory-index.md
+
+# Session artifacts
+HANDOFF.md
+BLOCKED.md
+handoffs/
+
+# Claude Code settings (may contain personal config)
+.claude/settings.local.json
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.key
+.oauth-token
+
+# State (machine-specific)
+state.db
+state.db-journal
+state.db-wal
+
+# Coverage
+coverage/

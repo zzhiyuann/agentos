@@ -1,0 +1,38 @@
+services:
+  agentos:
+    build: .
+    ports:
+      - "3848:3848"
+    env_file:
+      - .env
+    volumes:
+      # Persist SQLite state and agent memory across restarts
+      - aos-state:/root/.aos
+      # Mount your agent personas (create an agents/ dir with your CLAUDE.md files)
+      # Uncomment to use custom agents:
+      # - ./agents:/root/.aos/agents
+      # Mount workspaces so agent output is accessible from the host
+      - ./workspaces:/root/agent-workspaces
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3848/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Cloudflare tunnel — exposes webhook server to Linear
+  # Prints a temporary public URL to the logs on startup.
+  # Copy it and configure as your Linear webhook URL:
+  #   https://<random>.trycloudflare.com/webhook
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://agentos:3848
+    depends_on:
+      agentos:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles:
+      - tunnel
+
+volumes:
+  aos-state:
