@@ -37,7 +37,7 @@ function makeAttempt(status: 'pending' | 'running' | 'completed' | 'failed' | 'b
   return {
     id: `attempt-${Math.random().toString(36).slice(2)}`,
     issue_id: 'issue-uuid',
-    issue_key: 'RYA-99',
+    issue_key: 'ENG-99',
     agent_session_id: null,
     agent_type: agentType,
     runner_session_id: null,
@@ -62,7 +62,7 @@ describe('checkCircuitBreaker', () => {
 
   it('allows retry when no previous attempts exist', () => {
     mockGetAttempts.mockReturnValue([]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(0);
     expect(result.backoffMs).toBe(0);
@@ -73,7 +73,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('completed'),
       makeAttempt('completed'),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(0);
   });
@@ -83,7 +83,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed'),
       makeAttempt('completed'),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(1);
     expect(result.backoffMs).toBe(BASE_BACKOFF_MS); // 60s
@@ -95,7 +95,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed'),
       makeAttempt('completed'),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(2);
     expect(result.backoffMs).toBe(BASE_BACKOFF_MS * 2); // 120s
@@ -107,7 +107,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed'),
       makeAttempt('failed'),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(false);
     expect(result.consecutiveFailures).toBe(3);
     expect(result.reason).toContain('3 consecutive');
@@ -121,7 +121,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed'),
       makeAttempt('failed'),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(1); // only the one after success
   });
@@ -134,12 +134,12 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed', 'lead-engineer'), // different role
     ]);
     // Check for lead-engineer: only 1 failure
-    const result = checkCircuitBreaker('RYA-99', 'lead-engineer');
+    const result = checkCircuitBreaker('ENG-99', 'lead-engineer');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(1);
 
     // Check for cto: 3 failures — blocked
-    const resultCto = checkCircuitBreaker('RYA-99', 'cto');
+    const resultCto = checkCircuitBreaker('ENG-99', 'cto');
     expect(resultCto.allowed).toBe(false);
     expect(resultCto.consecutiveFailures).toBe(3);
   });
@@ -150,11 +150,11 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed'),
     ]);
     // Default (3): should allow
-    expect(checkCircuitBreaker('RYA-99').allowed).toBe(true);
+    expect(checkCircuitBreaker('ENG-99').allowed).toBe(true);
     // Custom max=2: should block
-    expect(checkCircuitBreaker('RYA-99', undefined, 2).allowed).toBe(false);
+    expect(checkCircuitBreaker('ENG-99', undefined, 2).allowed).toBe(false);
     // Custom max=5: should allow
-    expect(checkCircuitBreaker('RYA-99', undefined, 5).allowed).toBe(true);
+    expect(checkCircuitBreaker('ENG-99', undefined, 5).allowed).toBe(true);
   });
 
   it('ignores old failures outside the time window', () => {
@@ -163,7 +163,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed', 'cto', 130),
       makeAttempt('failed', 'cto', 125),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(true);
     expect(result.consecutiveFailures).toBe(0);
   });
@@ -175,7 +175,7 @@ describe('checkCircuitBreaker', () => {
       makeAttempt('failed'),
       makeAttempt('failed'),
     ]);
-    const result = checkCircuitBreaker('RYA-99');
+    const result = checkCircuitBreaker('ENG-99');
     expect(result.allowed).toBe(false);
     expect(result.consecutiveFailures).toBe(3);
   });
@@ -187,7 +187,7 @@ describe('checkCircuitBreaker', () => {
       attempts.push(makeAttempt('failed'));
     }
     mockGetAttempts.mockReturnValue(attempts);
-    const result = checkCircuitBreaker('RYA-99', undefined, 25); // allow up to 25
+    const result = checkCircuitBreaker('ENG-99', undefined, 25); // allow up to 25
     expect(result.allowed).toBe(true);
     expect(result.backoffMs).toBeLessThanOrEqual(MAX_BACKOFF_MS);
   });
@@ -200,17 +200,17 @@ describe('tripCircuitBreaker', () => {
   });
 
   it('cancels queued items', async () => {
-    await tripCircuitBreaker('RYA-99', 'issue-uuid', 'cto', 3);
-    expect(mockCancelQueued).toHaveBeenCalledWith('RYA-99');
+    await tripCircuitBreaker('ENG-99', 'issue-uuid', 'cto', 3);
+    expect(mockCancelQueued).toHaveBeenCalledWith('ENG-99');
   });
 
   it('moves issue to Todo', async () => {
-    await tripCircuitBreaker('RYA-99', 'issue-uuid', 'cto', 3);
+    await tripCircuitBreaker('ENG-99', 'issue-uuid', 'cto', 3);
     expect(mockUpdateState).toHaveBeenCalledWith('issue-uuid', 'Todo');
   });
 
   it('posts a circuit breaker comment', async () => {
-    await tripCircuitBreaker('RYA-99', 'issue-uuid', 'cto', 3);
+    await tripCircuitBreaker('ENG-99', 'issue-uuid', 'cto', 3);
     expect(mockAddComment).toHaveBeenCalledTimes(1);
     const commentBody = mockAddComment.mock.calls[0][1];
     expect(commentBody).toContain(CIRCUIT_BREAKER_MARKER);
@@ -220,7 +220,7 @@ describe('tripCircuitBreaker', () => {
 
   it('does not duplicate the comment if already posted', async () => {
     mockGetComments.mockResolvedValue([`Some text... ${CIRCUIT_BREAKER_MARKER} ...more`]);
-    await tripCircuitBreaker('RYA-99', 'issue-uuid', 'cto', 3);
+    await tripCircuitBreaker('ENG-99', 'issue-uuid', 'cto', 3);
     expect(mockAddComment).not.toHaveBeenCalled();
   });
 });

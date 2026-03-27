@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock all external dependencies
 vi.mock('../core/config.js', () => ({
-  getConfig: () => ({ imacHost: 'test-host', stateDir: '/tmp/aos-test' }),
+  getConfig: () => ({ execHost: 'test-host', stateDir: '/tmp/aos-test' }),
   resolveWorkspace: vi.fn((_key: string, _proj?: string) => `/tmp/workspaces/TEST-1`),
 }));
 

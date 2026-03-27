@@ -99,7 +99,7 @@ export async function spawnCommand(issueKeyOrId: string, options: { agent?: stri
     issue_id: issue.id,
     issue_key: issue.identifier,
     agent_type: agentType,
-    host: config.imacHost,
+    host: config.execHost,
     agent_session_id: agentSessionId ?? undefined,
     tmux_session: result.tmuxSession,
     runner_session_id: result.runnerSessionId,

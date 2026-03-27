@@ -122,7 +122,7 @@ export function buildGroundingPrompt(persona: AgentPersona, mode: 'task' | 'conv
 
 **You are ${persona.role}.** Your AGENT_ROLE env var is set to \`${persona.role}\`.
 
-**For ALL Linear operations, use \`linear-tool\` (NOT MCP Linear tools).** MCP Linear tools use the CEO's personal token and will post as "Zhiyuan Wang" — that is identity fraud. Always use:
+**For ALL Linear operations, use \`linear-tool\` (NOT MCP Linear tools).** MCP Linear tools use a different token and may post under the wrong identity. Always use:
 \`\`\`
 linear-tool comment <issue-key> "message"
 linear-tool dispatch <role> <issue-key> "context"

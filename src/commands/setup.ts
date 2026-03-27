@@ -94,7 +94,7 @@ export async function setupCommand(options: { apiKey?: string }): Promise<void> 
 
   console.log('\n' + chalk.bold('Setup complete!'));
   console.log(`  Team:       ${config.linearTeamKey}`);
-  console.log(`  Host:       ${config.imacUser}@${config.imacHost}`);
+  console.log(`  Host:       ${config.execUser}@${config.execHost}`);
   console.log(`  Workspaces: ${config.workspaceBase}`);
   console.log(`  State:      ${config.stateDir}`);
   console.log('\nNext steps:');

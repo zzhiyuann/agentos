@@ -153,7 +153,7 @@ export async function agentStartCommand(role: string, issueKey?: string, options
         issue_id: issueId,
         issue_key: issueKey,
         agent_type: role,
-        host: config.imacHost,
+        host: config.execHost,
         tmux_session: tmuxName,
         workspace_path: workspacePath,
         agent_session_id: options?.webhookSessionId ?? undefined,
@@ -248,7 +248,7 @@ export async function agentStartCommand(role: string, issueKey?: string, options
     return 'error';
   }
 
-  // Reuse webhook session if provided (RYA-237: prevents dual-session problem).
+  // Reuse webhook session if provided to prevent dual-session problem.
   // Only create a new session when no webhook session was passed (e.g., manual dispatch, auto-dispatch).
   if (issueId && issueKey) {
     const agentToken = getAgentLinearToken(role);
@@ -274,7 +274,7 @@ export async function agentStartCommand(role: string, issueKey?: string, options
       issue_id: issueId,
       issue_key: issueKey,
       agent_type: role,
-      host: config.imacHost,
+      host: config.execHost,
       agent_session_id: agentSessionId ?? undefined,
       tmux_session: result.tmuxSession || tmuxName,
       workspace_path: workspacePath,

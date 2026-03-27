@@ -21,8 +21,8 @@ within a project, maintain context, and respond to multiple trigger types.
 
 ### Option A: Issue-scoped (current)
 ```
-Issue RYA-7 → CC Session A (workspace: ~/agent-workspaces/RYA-7/)
-Issue RYA-8 → CC Session B (workspace: ~/agent-workspaces/RYA-8/)
+Issue ENG-7 → CC Session A (workspace: ~/agent-workspaces/ENG-7/)
+Issue ENG-8 → CC Session B (workspace: ~/agent-workspaces/ENG-8/)
 ```
 - Pro: Simple, isolated
 - Con: No shared context, wasteful for related issues
@@ -30,8 +30,8 @@ Issue RYA-8 → CC Session B (workspace: ~/agent-workspaces/RYA-8/)
 ### Option B: Project-scoped (proposed)
 ```
 Project "AgentOS v2" → CC Session (workspace: ~/repos/agentos/)
-  ├── Works on RYA-7
-  ├── Then RYA-8
+  ├── Works on ENG-7
+  ├── Then ENG-8
   └── Maintains context across issues
 ```
 - Pro: Realistic, shared codebase knowledge
@@ -119,7 +119,7 @@ When CC finishes an issue (HANDOFF.md):
 1. Report completion to Linear
 2. Pop next issue from queue
 3. Update CLAUDE.md with new issue context
-4. Pipe "Now work on RYA-8: <title>" into CC session
+4. Pipe "Now work on ENG-8: <title>" into CC session
 5. CC continues in the same session with full context
 
 ## Workspace Mapping

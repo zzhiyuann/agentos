@@ -150,7 +150,7 @@ describe('shouldSkipReview', () => {
 
 describe('hasActiveHandoff', () => {
   it('returns false when no other attempts exist', () => {
-    expect(hasActiveHandoff('RYA-42', 'attempt-1')).toBe(false);
+    expect(hasActiveHandoff('ENG-42', 'attempt-1')).toBe(false);
   });
 });
 
@@ -160,7 +160,7 @@ describe('validateHandoff', () => {
   const baseAttempt: Attempt = {
     id: 'attempt-1',
     issue_id: 'issue-id-1',
-    issue_key: 'RYA-42',
+    issue_key: 'ENG-42',
     agent_session_id: null,
     agent_type: 'cpo',
     runner_session_id: null,
@@ -187,13 +187,13 @@ describe('validateHandoff', () => {
     beforeEach(() => {
       vi.mocked(getIssue).mockResolvedValue({
         id: 'issue-id-1',
-        identifier: 'RYA-42',
+        identifier: 'ENG-42',
         title: 'Fix authentication bug',
         description: undefined,
         priority: 2,
         labels: ['bug'],
         state: 'In Progress',
-        url: 'https://linear.app/test/RYA-42',
+        url: 'https://linear.app/test/ENG-42',
       });
     });
 
@@ -226,13 +226,13 @@ describe('validateHandoff', () => {
     beforeEach(() => {
       vi.mocked(getIssue).mockResolvedValue({
         id: 'issue-id-1',
-        identifier: 'RYA-60',
-        title: '[Strategy] One-Person Company Ideas for Zhiyuan',
+        identifier: 'ENG-60',
+        title: '[Strategy] Quarterly Planning Ideas',
         description: undefined,
         priority: 2,
         labels: ['strategy'],
         state: 'In Progress',
-        url: 'https://linear.app/test/RYA-60',
+        url: 'https://linear.app/test/ENG-60',
       });
     });
 
@@ -245,7 +245,7 @@ describe('validateHandoff', () => {
 
     it('passes with workspace reference', async () => {
       const result = await validateHandoff(baseAttempt,
-        'Output written to workspace at /tmp/agent-workspaces/cpo/RYA-60-strategy.md');
+        'Output written to workspace at /tmp/agent-workspaces/cpo/ENG-60-strategy.md');
       expect(result.passed).toBe(true);
     });
 
@@ -282,13 +282,13 @@ describe('validateHandoff', () => {
     beforeEach(() => {
       vi.mocked(getIssue).mockResolvedValue({
         id: 'issue-id-1',
-        identifier: 'RYA-50',
+        identifier: 'ENG-50',
         title: 'Collaboration quality audit v2',
         description: undefined,
         priority: 1,
         labels: ['audit'],
         state: 'In Progress',
-        url: 'https://linear.app/test/RYA-50',
+        url: 'https://linear.app/test/ENG-50',
       });
     });
 
@@ -301,10 +301,10 @@ describe('validateHandoff', () => {
 
     it('does not warn when audit task created follow-up issues', async () => {
       vi.mocked(getRecentAttemptsByAgent).mockReturnValue([
-        { id: 'attempt-2', issue_key: 'RYA-51' } as Attempt,
+        { id: 'attempt-2', issue_key: 'ENG-51' } as Attempt,
       ]);
       const result = await validateHandoff(baseAttempt,
-        'Audit verified all modules. Tests pass. Created RYA-51 for the one issue found.');
+        'Audit verified all modules. Tests pass. Created ENG-51 for the one issue found.');
       expect(result.warnings).not.toContain('Audit/research task completed without creating any follow-up issues');
     });
   });
@@ -321,13 +321,13 @@ describe('validateHandoff', () => {
       vi.mocked(execSync).mockImplementation(() => { throw new Error('dir not found'); });
       vi.mocked(getIssue).mockResolvedValue({
         id: 'issue-id-1',
-        identifier: 'RYA-42',
+        identifier: 'ENG-42',
         title: 'Fix bug',
         description: undefined,
         priority: 2,
         labels: [],
         state: 'In Progress',
-        url: 'https://linear.app/test/RYA-42',
+        url: 'https://linear.app/test/ENG-42',
       });
       const result = await validateHandoff(baseAttempt, 'All tests pass.');
       // Memory check should not crash, and verification check should still pass
@@ -337,13 +337,13 @@ describe('validateHandoff', () => {
     it('detects non-code task by label even without title pattern', async () => {
       vi.mocked(getIssue).mockResolvedValue({
         id: 'issue-id-1',
-        identifier: 'RYA-70',
+        identifier: 'ENG-70',
         title: 'Evaluate new markets in Southeast Asia',
         description: undefined,
         priority: 3,
         labels: ['research'],
         state: 'In Progress',
-        url: 'https://linear.app/test/RYA-70',
+        url: 'https://linear.app/test/ENG-70',
       });
       const result = await validateHandoff(baseAttempt,
         'Research report produced with market analysis and recommendations.');

@@ -16,7 +16,7 @@ export interface AgentDefinition {
 export type AgentRegistry = Record<string, AgentDefinition>;
 
 function getDefaultRegistry(): AgentRegistry {
-  const host = getConfig().imacHost;
+  const host = getConfig().execHost;
   return {
     cc: {
       label: 'agent:cc',
@@ -34,7 +34,7 @@ function getRegistryPath(): string {
 
 export function getAgentRegistry(): AgentRegistry {
   const path = getRegistryPath();
-  const host = getConfig().imacHost;
+  const host = getConfig().execHost;
   let registry: AgentRegistry;
   if (existsSync(path)) {
     registry = JSON.parse(readFileSync(path, 'utf-8'));

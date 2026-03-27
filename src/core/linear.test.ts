@@ -37,10 +37,10 @@ describeLive('Linear API - live queries', () => {
   });
 
   it('getIssue fetches a real issue by key', async () => {
-    // RYA-8 is the first integration test issue — should exist
-    const issue = await getIssue('RYA-8');
+    // ENG-8 is the first integration test issue — should exist
+    const issue = await getIssue('ENG-8');
     expect(issue.id).toBeDefined();
-    expect(issue.identifier).toBe('RYA-8');
+    expect(issue.identifier).toBe('ENG-8');
     expect(issue.title).toBeTruthy();
     expect(typeof issue.priority).toBe('number');
     expect(Array.isArray(issue.labels)).toBe(true);
@@ -48,12 +48,12 @@ describeLive('Linear API - live queries', () => {
   });
 
   it('getIssue includes project field', async () => {
-    const issue = await getIssue('RYA-8');
+    const issue = await getIssue('ENG-8');
     // project may or may not be set — just verify the field exists
     expect('project' in issue).toBe(true);
   });
 
   it('getIssue throws for non-existent issue', async () => {
-    await expect(getIssue('RYA-99999')).rejects.toThrow();
+    await expect(getIssue('ENG-99999')).rejects.toThrow();
   });
 });

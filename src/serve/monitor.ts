@@ -189,7 +189,7 @@ export async function validateHandoff(attempt: Attempt, handoff: string): Promis
     // Count prose items (lines starting with - or numbered) that don't reference issue keys
     const proseItems = section.split('\n')
       .filter(line => /^\s*[-*\d.]/.test(line))
-      .filter(line => !/RYA-\d+/i.test(line))
+      .filter(line => !/[A-Z]+-\d+/i.test(line))
       .filter(line => line.trim().length > 20); // skip very short lines
     if (proseItems.length >= 2) {
       warnings.push(`HANDOFF.md has ${proseItems.length} vague follow-up suggestions without sub-issue references — use [to decide] sub-issues or dispatch`);
@@ -253,7 +253,7 @@ export async function monitorSessions(): Promise<void> {
     if (!attempt.tmux_session || !attempt.workspace_path) continue;
 
     const alive = sessionExists(attempt.tmux_session);
-    // Read state files from per-issue state dir (RYA-246), with workspace fallback for in-flight sessions
+    // Read state files from per-issue state dir, with workspace fallback for in-flight sessions
     const handoffPath = resolveStatePath(attempt.issue_key, attempt.workspace_path, 'HANDOFF.md');
     const blockedPath = resolveStatePath(attempt.issue_key, attempt.workspace_path, 'BLOCKED.md');
     const handoff = readFileOnRemote(handoffPath);
@@ -475,7 +475,7 @@ export async function monitorSessions(): Promise<void> {
       continue;
     }
 
-    // Case 2: BLOCKED.md appeared (read from per-issue state dir — RYA-246)
+    // Case 2: BLOCKED.md appeared (read from per-issue state dir)
     if (blocked && !reportedHandoffs.has(`${attempt.id}:blocked`)) {
       reportedHandoffs.add(`${attempt.id}:blocked`);
       console.log(chalk.red(`[${ts}] Agent blocked: ${attempt.issue_key}`));

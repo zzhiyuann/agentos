@@ -4,7 +4,7 @@
  *   - linear-client.ts   (client mgmt, auth, GraphQL, workflow states)
  *   - linear-issues.ts   (issue CRUD, comments, labels, documents)
  *   - linear-sessions.ts (AgentSession operations)
- * See RYA-117 Finding 6, RYA-142.
+ * See individual modules for details.
  */
 
 export {

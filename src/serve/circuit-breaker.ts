@@ -44,7 +44,7 @@ export interface CircuitBreakerResult {
  * Counts consecutive failed attempts (most recent first) within the time window.
  * A successful completion resets the failure chain.
  *
- * @param issueKey - Linear issue identifier (e.g., "RYA-201")
+ * @param issueKey - Linear issue identifier (e.g., "ENG-201")
  * @param agentRole - Optional: only count failures for this agent role
  * @param maxRetries - Maximum consecutive failures allowed (default 3)
  */

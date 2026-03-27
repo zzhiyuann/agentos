@@ -1,21 +1,28 @@
 #!/usr/bin/env bash
 #
-# Install AgentOS git hooks.
+# Install AgentOS Claude Code hooks on the execution host.
 # Run from project root: scripts/install-hooks.sh
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-HOOKS_DIR=".git/hooks"
+echo "Installing AgentOS hooks..."
 
-if [ ! -d "$HOOKS_DIR" ]; then
-  echo "Error: not a git repo (no .git/hooks/)"
-  exit 1
-fi
+# Ensure hooks directory exists
+mkdir -p ~/.aos/hooks
 
-# Install post-commit hook
-cp scripts/post-commit-hook.sh "$HOOKS_DIR/post-commit"
-chmod +x "$HOOKS_DIR/post-commit"
-echo "Installed: post-commit hook (auto-rebuild on src/ changes)"
+# Install session reporter hook
+cp hooks/aos-report.sh ~/.aos/hooks/
+chmod +x ~/.aos/hooks/aos-report.sh
+echo "Installed: aos-report.sh (session completion reporter)"
 
+# Install progress reporter hook
+cp hooks/progress-report.sh ~/.aos/hooks/
+chmod +x ~/.aos/hooks/progress-report.sh
+echo "Installed: progress-report.sh (progress reporter)"
+
+echo ""
+echo "Add these hooks to ~/.claude/settings.json under \"hooks\"."
+echo "See hooks/README.md for details."
+echo ""
 echo "Done."

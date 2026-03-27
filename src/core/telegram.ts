@@ -125,7 +125,7 @@ export function parseMentions(text: string): string[] {
   const lower = text.toLowerCase();
 
   for (const [pattern, role] of Object.entries(roleMap)) {
-    if (lower.includes(`@${pattern}`) || lower.includes(`@ryanhub_${pattern}`)) {
+    if (lower.includes(`@${pattern}`)) {
       if (!mentions.includes(role)) {
         mentions.push(role);
       }

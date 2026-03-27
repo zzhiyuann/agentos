@@ -1,8 +1,8 @@
 export interface AosConfig {
   linearTeamId: string;
   linearTeamKey: string;
-  imacHost: string;
-  imacUser: string;
+  execHost: string;
+  execUser: string;
   workspaceBase: string;
   dbPath: string;
   pollIntervalMs: number;

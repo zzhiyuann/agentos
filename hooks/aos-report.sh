@@ -1,6 +1,6 @@
 #!/bin/bash
 # AgentOS session reporter hook for Claude Code
-# Install on iMac: add to ~/.claude/settings.json under hooks.Stop
+# Install on execution host: add to ~/.claude/settings.json under hooks.Stop
 #
 # When a Claude Code session with name "aos-*" stops, this hook:
 # 1. Reads HANDOFF.md/BLOCKED.md from the workspace

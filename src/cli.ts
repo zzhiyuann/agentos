@@ -41,7 +41,7 @@ agent
 
 agent
   .command('start <role> [issue]')
-  .description('Start an agent with full persona + memory (e.g., aos agent start cto RYA-7)')
+  .description('Start an agent with full persona + memory (e.g., aos agent start cto ENG-7)')
   .option('-m, --model <model>', 'Override base model: cc, codex')
   .action(async (role, issue, opts) => { await agentStartCommand(role, issue, opts); });
 
@@ -159,7 +159,7 @@ swarm
   .option('--lower-is-better', 'Metric is lower-is-better (default: higher)')
   .option('-d, --direction <directions...>', 'Research directions (format: focus:constraint1,constraint2)')
   .option('--frontier <ideas...>', 'Initial frontier ideas')
-  .option('--issue <key>', 'Parent Linear issue key for progress reporting (e.g. RYA-42)')
+  .option('--issue <key>', 'Parent Linear issue key for progress reporting (e.g. ENG-42)')
   .option('--issue-id <id>', 'Parent Linear issue UUID (auto-resolved if --issue provided)')
   .action((opts) => swarmInitCommand({
     name: opts.name,

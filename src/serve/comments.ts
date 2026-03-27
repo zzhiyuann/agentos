@@ -37,8 +37,8 @@ export async function handleCommentCreated(payload: {
     return;
   }
 
-  // Skip "self:" prefix or @Zhiyuan Wang mentions — CEO note-to-self, no agent response
-  if (/^\s*self:/i.test(commentBody) || /@Zhiyuan\s*Wang/i.test(commentBody)) {
+  // Skip "self:" prefix — admin note-to-self, no agent response
+  if (/^\s*self:/i.test(commentBody)) {
     console.log(chalk.dim(`  Skipping self-addressed comment on ${data.issue?.identifier || data.issueId}`));
     return;
   }

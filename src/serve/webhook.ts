@@ -131,8 +131,8 @@ export async function handleWebhook(payload: WebhookPayload): Promise<void> {
           commentId = webhookId;
         }
 
-        // Skip "self:" prefix or @Zhiyuan Wang — CEO note-to-self, no agent response
-        if (/^\s*self:/i.test(userMsg) || /^\s*self:/i.test(webhookBody) || /@Zhiyuan\s*Wang/i.test(userMsg) || /@Zhiyuan\s*Wang/i.test(webhookBody)) {
+        // Skip "self:" prefix — admin note-to-self, no agent response
+        if (/^\s*self:/i.test(userMsg) || /^\s*self:/i.test(webhookBody)) {
           console.log(chalk.dim(`  Skipping self-addressed follow-up on ${issue.identifier}`));
           if (sessionId) {
             dismissAgentSession(sessionId, undefined, '–').catch(() => {});
@@ -372,8 +372,8 @@ export async function handleWebhook(payload: WebhookPayload): Promise<void> {
     if (activity?.body) {
       const userMsg = activity.body;
 
-      // Skip "self:" prefix or @Zhiyuan Wang — CEO note-to-self, no agent response
-      if (/^\s*self:/i.test(userMsg) || /@Zhiyuan\s*Wang/i.test(userMsg)) {
+      // Skip "self:" prefix — admin note-to-self, no agent response
+      if (/^\s*self:/i.test(userMsg)) {
         console.log(chalk.dim(`  Skipping self-addressed prompted message on ${issue.identifier}`));
         if (sessionId) {
           dismissAgentSession(sessionId, undefined, '–').catch(() => {});

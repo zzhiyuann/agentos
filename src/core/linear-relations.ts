@@ -1,6 +1,6 @@
 /**
  * Linear issue relation operations: blocking, duplicates, related issues.
- * New module for RYA-147: Issue Relations support.
+ * Issue Relations support.
  *
  * Relation types in Linear:
  *   - blocks: issue A blocks issue B (B cannot proceed until A is done)
@@ -106,10 +106,10 @@ export async function getIssueRelations(issueKey: string): Promise<IssueRelation
 
 /**
  * Create a relation between two issues.
- * The Linear SDK accepts issue identifiers (e.g., 'RYA-123') directly.
+ * The Linear SDK accepts issue identifiers (e.g., 'ENG-123') directly.
  *
- * @param issueKey - The source issue (e.g., 'RYA-147')
- * @param relatedKey - The related issue (e.g., 'RYA-100')
+ * @param issueKey - The source issue (e.g., 'ENG-147')
+ * @param relatedKey - The related issue (e.g., 'ENG-100')
  * @param type - 'blocks' | 'blocked_by' | 'related' | 'duplicate'
  * @param agentToken - Optional agent OAuth token for writes
  */

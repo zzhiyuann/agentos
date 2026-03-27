@@ -681,7 +681,7 @@ You (CTO) review:
 - Tests pass
 
 **Stage 5 — Ship to GitHub (10 min)**
-- Create GitHub repo: \`gh repo create zzhiyuann/${idea.repoName} --public --description "..."\`
+- Create GitHub repo: \`gh repo create your-org/${idea.repoName} --public --description "..."\`
 - Push code
 - Enable GitHub Pages if applicable
 - Post shipping summary to Linear
@@ -791,7 +791,7 @@ export async function projectPipelineHeartbeat(): Promise<void> {
     }
 
     // Dispatch CTO via company dispatch system
-    const dispatchContext = `Project pipeline triggered for "${idea.title}". Execute the full 5-stage pipeline protocol in the issue description. Ship to github.com/zzhiyuann/${idea.repoName}. Estimated effort: ${idea.estimatedEffort}.`;
+    const dispatchContext = `Project pipeline triggered for "${idea.title}". Execute the full 5-stage pipeline protocol in the issue description. Ship to github.com/your-org/${idea.repoName}. Estimated effort: ${idea.estimatedEffort}.`;
 
     await handleDispatch({
       role: 'cto',

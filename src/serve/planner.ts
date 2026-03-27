@@ -212,7 +212,7 @@ function resolveAgentRole(nameHint: string): string {
 
 /**
  * Create a sub-issue in Linear under a parent issue.
- * Returns the new issue's key (e.g., "RYA-120").
+ * Returns the new issue's key (e.g., "ENG-120").
  */
 async function createSubIssue(
   parentIssueId: string,

@@ -80,11 +80,11 @@ Agent personas and memory live at `~/.aos/agents/{role}/`:
 Assign an agent to a Linear issue:
 
 ```bash
-# Start the CTO on issue RYA-42
-aos agent start cto RYA-42
+# Start the CTO on issue ENG-42
+aos agent start cto ENG-42
 
 # Override the model if needed
-aos agent start cto RYA-42 --model codex
+aos agent start cto ENG-42 --model codex
 ```
 
 The agent spawns in a local tmux session with its full persona and memory loaded.
@@ -93,7 +93,7 @@ The agent spawns in a local tmux session with its full persona and memory loaded
 
 ```bash
 # Attach to the agent's terminal
-aos jump RYA-42
+aos jump ENG-42
 
 # Send a message to a running agent
 aos agent talk cto "Focus on the auth module first"
@@ -133,7 +133,7 @@ This polls Linear for new assignments every 30 seconds.
 ### Agent management
 ```bash
 aos agent list                    # Roster + status
-aos agent start cto RYA-42       # Start agent on issue
+aos agent start cto ENG-42       # Start agent on issue
 aos agent stop cto                # Graceful stop
 aos agent talk cto "message"      # Send message
 aos agent memory cto              # View memories
@@ -141,20 +141,20 @@ aos agent memory cto              # View memories
 
 ### Task operations
 ```bash
-aos spawn RYA-42                  # Spawn agent on issue (auto-routes)
-aos batch RYA-1 RYA-2 RYA-3      # Batch spawn multiple
+aos spawn ENG-42                  # Spawn agent on issue (auto-routes)
+aos batch ENG-1 ENG-2 ENG-3      # Batch spawn multiple
 aos status --all                  # All attempts (incl. completed/failed)
-aos jump RYA-42                   # Attach to agent terminal
-aos kill RYA-42                   # Terminate session
-aos kill RYA-42 --done            # Terminate + mark done
-aos resume RYA-42                 # Re-attempt failed issue
+aos jump ENG-42                   # Attach to agent terminal
+aos kill ENG-42                   # Terminate session
+aos kill ENG-42 --done            # Terminate + mark done
+aos resume ENG-42                 # Re-attempt failed issue
 ```
 
 ### Monitoring
 ```bash
 aos queue                         # View spawn queue
 aos logs                          # Event history
-aos logs RYA-42                   # Events for specific issue
+aos logs ENG-42                   # Events for specific issue
 ```
 
 ## How It All Fits Together
@@ -209,11 +209,11 @@ aos logs
 ### Agent stuck / not completing
 ```bash
 # Check what the agent is doing
-aos jump RYA-42
+aos jump ENG-42
 
 # Force terminate and retry
-aos kill RYA-42
-aos resume RYA-42
+aos kill ENG-42
+aos resume ENG-42
 ```
 
 ## Next Steps

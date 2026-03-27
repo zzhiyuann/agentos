@@ -1,7 +1,7 @@
 /**
  * Swarm State Manager — File-based experiment tracking for research swarms.
  *
- * Concurrency-safe operations (fixes from RYA-155):
+ * Concurrency-safe operations:
  * 1. Lock TOCTOU — replaced existsSync+writeFileSync with O_EXCL atomic create
  * 2. Frontier claim — protected with state mutex (mkdir-based spinlock)
  * 3. Best.json update — protected with state mutex + atomic writes

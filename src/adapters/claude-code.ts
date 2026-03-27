@@ -23,7 +23,7 @@ export class ClaudeCodeAdapter implements RunnerAdapter {
       ? `aos-${opts.agentRole}-${opts.issueKey}`
       : `aos-${opts.issueKey}-${opts.attemptNumber}`;
 
-    // Clean old state files from per-issue state dir (RYA-246).
+    // Clean old state files from per-issue state dir.
     // State files live in ~/.aos/work/{issue-key}/, isolated from code workspace.
     // No shared-workspace guard needed — each issue has its own state dir.
     const stateDir = getIssueStateDir(opts.issueKey);
@@ -75,7 +75,7 @@ export class ClaudeCodeAdapter implements RunnerAdapter {
       }, null, 2)
     );
 
-    // Write structured HANDOFF template to per-issue state dir (RYA-246)
+    // Write structured HANDOFF template to per-issue state dir
     // Skip for follow-ups — agent just needs to write its answer directly
     if (!opts.isFollowUp) {
       writeFileOnRemote(
@@ -116,7 +116,7 @@ export class ClaudeCodeAdapter implements RunnerAdapter {
     // Build command:
     // 1. Unlock keychain from secure file (not inline password)
     // 2. Source API key from env file (not on command line)
-    // 3. Launch Claude Code with auto mode — classifier reviews actions for safety (RYA-86)
+    // 3. Launch Claude Code with auto mode — classifier reviews actions for safety
     const safePrompt = opts.initialPrompt.replace(/'/g, "'\\''");
     const agentRoleExport = opts.agentRole ? `export AGENT_ROLE=${opts.agentRole}` : '';
     const parts = [

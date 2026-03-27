@@ -122,7 +122,7 @@ afterEach(() => {
 
 describe('registerSwarm / unregisterSwarm', () => {
   it('registers and unregisters a swarm workspace', () => {
-    registerSwarm('/tmp/test-ws', 'RYA-42', 'uuid-42');
+    registerSwarm('/tmp/test-ws', 'ENG-42', 'uuid-42');
     // Should be in the registry now — verify via getSwarmDashboardData (no swarm dir, so empty)
     unregisterSwarm('/tmp/test-ws');
     // No error means success
@@ -130,7 +130,7 @@ describe('registerSwarm / unregisterSwarm', () => {
 
   it('updates existing registration with new issue info', () => {
     registerSwarm('/tmp/test-ws');
-    registerSwarm('/tmp/test-ws', 'RYA-99', 'uuid-99');
+    registerSwarm('/tmp/test-ws', 'ENG-99', 'uuid-99');
     // Should not create duplicates — no error
   });
 });
@@ -276,7 +276,7 @@ describe('monitorSwarms', () => {
 
   it('posts progress comment on parent issue when experiments accumulate', async () => {
     createTestSwarm();
-    registerSwarm(TEST_WORKSPACE, 'RYA-42', 'issue-uuid-42');
+    registerSwarm(TEST_WORKSPACE, 'ENG-42', 'issue-uuid-42');
 
     // First scan
     await monitorSwarms();
@@ -353,7 +353,7 @@ describe('getSwarmDashboardData', () => {
 describe('stall notification includes parent issue comment', () => {
   it('posts stall warning to parent issue', async () => {
     createTestSwarm();
-    registerSwarm(TEST_WORKSPACE, 'RYA-42', 'issue-uuid-42');
+    registerSwarm(TEST_WORKSPACE, 'ENG-42', 'issue-uuid-42');
 
     await monitorSwarms();
 
@@ -374,7 +374,7 @@ describe('stall notification includes parent issue comment', () => {
 describe('completion notification includes parent issue comment', () => {
   it('posts completion report to parent issue', async () => {
     createTestSwarm();
-    registerSwarm(TEST_WORKSPACE, 'RYA-42', 'issue-uuid-42');
+    registerSwarm(TEST_WORKSPACE, 'ENG-42', 'issue-uuid-42');
     vi.mocked(listSessionsByPrefix).mockReturnValue([]);
 
     await monitorSwarms();

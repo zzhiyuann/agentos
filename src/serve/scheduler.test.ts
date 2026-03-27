@@ -108,7 +108,7 @@ describe('janitorAgentSessions — double-dismiss prevention', () => {
       {
         id: sessionId,
         status: 'created',
-        issue: { identifier: 'RYA-99', state: { name: 'Done' } },
+        issue: { identifier: 'ENG-99', state: { name: 'Done' } },
       } as any,
     ]);
 
@@ -125,7 +125,7 @@ describe('janitorAgentSessions — double-dismiss prevention', () => {
       {
         id: sessionId,
         status: 'created',
-        issue: { identifier: 'RYA-100', state: { name: 'Done' } },
+        issue: { identifier: 'ENG-100', state: { name: 'Done' } },
       } as any,
     ]);
 
@@ -149,7 +149,7 @@ describe('janitorAgentSessions — double-dismiss prevention', () => {
       {
         id: sessionId,
         status: 'created',
-        issue: { identifier: 'RYA-93', state: { name: 'Done' } },
+        issue: { identifier: 'ENG-93', state: { name: 'Done' } },
       } as any,
     ]);
 
@@ -165,14 +165,14 @@ describe('janitorAgentSessions — double-dismiss prevention', () => {
     const { getActiveAttempts } = await import('../core/db.js');
     // The attempt tracks session 'sess-tracked' — janitor should leave it alone
     vi.mocked(getActiveAttempts).mockReturnValueOnce([
-      { issue_key: 'RYA-200', agent_session_id: 'sess-tracked' } as any,
+      { issue_key: 'ENG-200', agent_session_id: 'sess-tracked' } as any,
     ]);
 
     vi.mocked(listAgentSessions).mockResolvedValueOnce([
       {
         id: 'sess-tracked',
         status: 'created',
-        issue: { identifier: 'RYA-200', state: { name: 'In Progress' } },
+        issue: { identifier: 'ENG-200', state: { name: 'In Progress' } },
       } as any,
     ]);
 
@@ -185,14 +185,14 @@ describe('janitorAgentSessions — double-dismiss prevention', () => {
     const { getActiveAttempts } = await import('../core/db.js');
     // The attempt tracks session 'sess-tracked', but 'sess-orphan' is untracked
     vi.mocked(getActiveAttempts).mockReturnValueOnce([
-      { issue_key: 'RYA-200', agent_session_id: 'sess-tracked' } as any,
+      { issue_key: 'ENG-200', agent_session_id: 'sess-tracked' } as any,
     ]);
 
     vi.mocked(listAgentSessions).mockResolvedValueOnce([
       {
         id: 'sess-orphan',
         status: 'created',
-        issue: { identifier: 'RYA-200', state: { name: 'In Progress' } },
+        issue: { identifier: 'ENG-200', state: { name: 'In Progress' } },
       } as any,
     ]);
 
@@ -248,7 +248,7 @@ describe('globalDismissedSessions GC', () => {
       {
         id: activeId,
         status: 'created',
-        issue: { identifier: 'RYA-50', state: { name: 'In Progress' } },
+        issue: { identifier: 'ENG-50', state: { name: 'In Progress' } },
       } as any,
     ]);
 
@@ -267,7 +267,7 @@ describe('globalDismissedSessions GC', () => {
 
 describe('isPermanentIssueError', () => {
   it('detects "Issue X not found" error', () => {
-    expect(isPermanentIssueError(new Error('Issue RYA-42 not found'))).toBe(true);
+    expect(isPermanentIssueError(new Error('Issue ENG-42 not found'))).toBe(true);
   });
 
   it('detects "Argument Validation Error" from Linear SDK', () => {
@@ -315,7 +315,7 @@ describe('drainQueue — deleted issue handling', () => {
     const queueItem = {
       id: 'q-1',
       issue_id: 'uuid-1',
-      issue_key: 'RYA-999',
+      issue_key: 'ENG-999',
       agent_role: 'cto',
       priority: 1,
       agent_session_id: null,
@@ -328,7 +328,7 @@ describe('drainQueue — deleted issue handling', () => {
     vi.mocked(peekQueue).mockReturnValue(queueItem);
     vi.mocked(dequeue).mockReturnValue(queueItem);
     vi.mocked(checkCircuitBreaker).mockReturnValue({ allowed: true, consecutiveFailures: 0, backoffMs: 0 });
-    vi.mocked(agentStartCommand).mockRejectedValue(new Error('Issue RYA-999 not found'));
+    vi.mocked(agentStartCommand).mockRejectedValue(new Error('Issue ENG-999 not found'));
     vi.mocked(cancelQueued).mockReturnValue(2);
 
     await drainQueue();
@@ -336,7 +336,7 @@ describe('drainQueue — deleted issue handling', () => {
     // Should cancel the specific item
     expect(cancelQueueItem).toHaveBeenCalledWith('q-1');
     // Should ALSO purge all remaining entries for this issue
-    expect(cancelQueued).toHaveBeenCalledWith('RYA-999');
+    expect(cancelQueued).toHaveBeenCalledWith('ENG-999');
   });
 
   it('does NOT purge remaining entries for transient errors', async () => {
@@ -347,7 +347,7 @@ describe('drainQueue — deleted issue handling', () => {
     const queueItem = {
       id: 'q-2',
       issue_id: 'uuid-2',
-      issue_key: 'RYA-100',
+      issue_key: 'ENG-100',
       agent_role: 'cto',
       priority: 1,
       agent_session_id: null,

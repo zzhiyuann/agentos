@@ -35,7 +35,7 @@ export async function authCommand(options: { clientId?: string; clientSecret?: s
   if (!options.clientId || !options.clientSecret) {
     console.log(chalk.bold('OAuth Setup Required'));
     console.log('');
-    console.log('1. Go to: https://linear.app/ryanhub/settings/api/applications');
+    console.log('1. Go to: https://linear.app/<your-workspace>/settings/api/applications');
     console.log('2. Create a new OAuth application');
     console.log('3. Run: aos auth --client-id <ID> --client-secret <SECRET>');
     return;

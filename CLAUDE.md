@@ -96,7 +96,7 @@ When HANDOFF.md is detected:
 
 ```bash
 aos agent list                    # roster + status
-aos agent start cto RYA-42       # start agent on issue
+aos agent start cto ENG-42       # start agent on issue
 aos agent stop cto                # graceful stop
 aos agent talk cto "message"      # send message
 aos agent memory cto              # view memories

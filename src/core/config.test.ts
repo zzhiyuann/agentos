@@ -37,8 +37,8 @@ describe('getConfig', () => {
     const config = getConfig();
     expect(config.linearTeamId).toBe('test-team-uuid-1234');
     expect(config.linearTeamKey).toBe('TST');
-    expect(config.imacHost).toBe('192.168.1.100');
-    expect(config.imacUser).toBe('testuser');
+    expect(config.execHost).toBe('192.168.1.100');
+    expect(config.execUser).toBe('testuser');
     expect(config.workspaceBase).toBe('~/agent-workspaces');
     expect(config.dbPath).toContain('.aos/state.db');
     expect(config.stateDir).toContain('.aos');
@@ -155,20 +155,20 @@ describe('getIssueStateDir', () => {
   });
 
   it('returns path under ~/.aos/work/{issueKey}', () => {
-    const dir = getIssueStateDir('RYA-999');
-    expect(dir).toBe(join(homedir(), '.aos', 'work', 'RYA-999'));
+    const dir = getIssueStateDir('ENG-999');
+    expect(dir).toBe(join(homedir(), '.aos', 'work', 'ENG-999'));
   });
 
   it('creates the directory', () => {
-    const dir = getIssueStateDir('RYA-999');
+    const dir = getIssueStateDir('ENG-999');
     expect(existsSync(dir)).toBe(true);
     // cleanup
     rmSync(dir, { recursive: true, force: true });
   });
 
   it('returns same path for same issue key', () => {
-    const a = getIssueStateDir('RYA-100');
-    const b = getIssueStateDir('RYA-100');
+    const a = getIssueStateDir('ENG-100');
+    const b = getIssueStateDir('ENG-100');
     expect(a).toBe(b);
     rmSync(a, { recursive: true, force: true });
   });
@@ -195,28 +195,28 @@ describe('resolveStatePath', () => {
       }
     }
     rmSync(testWorkspace, { recursive: true, force: true });
-    rmSync(getIssueStateDir('RYA-RESOLVE-1'), { recursive: true, force: true });
+    rmSync(getIssueStateDir('ENG-RESOLVE-1'), { recursive: true, force: true });
   });
 
   it('prefers state dir when file exists there', () => {
-    const stateDir = getIssueStateDir('RYA-RESOLVE-1');
+    const stateDir = getIssueStateDir('ENG-RESOLVE-1');
     writeFileSync(join(stateDir, 'HANDOFF.md'), 'state dir version');
     writeFileSync(join(testWorkspace, 'HANDOFF.md'), 'workspace version');
 
-    const path = resolveStatePath('RYA-RESOLVE-1', testWorkspace, 'HANDOFF.md');
+    const path = resolveStatePath('ENG-RESOLVE-1', testWorkspace, 'HANDOFF.md');
     expect(path).toBe(join(stateDir, 'HANDOFF.md'));
   });
 
   it('falls back to workspace when state dir file missing', () => {
-    const path = resolveStatePath('RYA-RESOLVE-1', testWorkspace, 'HANDOFF.md');
+    const path = resolveStatePath('ENG-RESOLVE-1', testWorkspace, 'HANDOFF.md');
     expect(path).toBe(join(testWorkspace, 'HANDOFF.md'));
   });
 
   it('works for BLOCKED.md', () => {
-    const stateDir = getIssueStateDir('RYA-RESOLVE-1');
+    const stateDir = getIssueStateDir('ENG-RESOLVE-1');
     writeFileSync(join(stateDir, 'BLOCKED.md'), 'blocked content');
 
-    const path = resolveStatePath('RYA-RESOLVE-1', testWorkspace, 'BLOCKED.md');
+    const path = resolveStatePath('ENG-RESOLVE-1', testWorkspace, 'BLOCKED.md');
     expect(path).toBe(join(stateDir, 'BLOCKED.md'));
   });
 });

@@ -7,7 +7,7 @@
  *
  * SAFETY: Permission-sensitive files (claude-code.ts, router.ts) are blocked
  * from auto-deploy. These require single-agent manual testing + COO approval
- * before fleet rollout. See RYA-203.
+ * before fleet rollout.
  */
 import { watch, statSync, readdirSync } from 'fs';
 import { execSync } from 'child_process';
@@ -21,7 +21,7 @@ const RESTART_EXIT_CODE = 100;
 /**
  * Permission-sensitive files that must NOT be auto-deployed.
  * Changes to these files affect how agents are spawned and what permissions they have.
- * Auto-deploying permission changes fleet-wide caused 3 production reverts (RYA-86/88).
+ * Auto-deploying permission changes fleet-wide caused production reverts.
  * Protocol: single-agent manual test → COO approval → manual deploy.
  */
 const PERMISSION_SENSITIVE_PATTERNS = [
@@ -119,14 +119,14 @@ function handleChange(projectRoot: string, changedFile?: string): void {
       return;
     }
 
-    // Block auto-deploy when permission-sensitive files changed (RYA-203)
+    // Block auto-deploy when permission-sensitive files changed
     if (blockedFiles.length > 0) {
       log(chalk.red('⛔ AUTO-DEPLOY BLOCKED — permission-sensitive files changed:'));
       for (const f of blockedFiles) {
         log(chalk.red(`   • ${f}`));
       }
       log(chalk.yellow('These files control agent spawn permissions. Fleet-wide auto-deploy'));
-      log(chalk.yellow('of permission changes caused 3 production incidents (RYA-86/88).'));
+      log(chalk.yellow('of permission changes caused production incidents.'));
       log(chalk.yellow(''));
       log(chalk.yellow('Required protocol:'));
       log(chalk.yellow('  1. Test on ONE agent manually (see runbook)'));

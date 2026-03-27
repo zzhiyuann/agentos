@@ -63,7 +63,7 @@ cloudflared tunnel --url http://localhost:3848
 
 ### Start/Stop Agents
 ```bash
-aos agent start cto RYA-42     # Start CTO on an issue
+aos agent start cto ENG-42     # Start CTO on an issue
 aos agent stop cto              # Graceful stop
 aos agent talk cto "message"    # Send message
 ```

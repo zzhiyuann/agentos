@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [],
+    "defaultMode": "auto"
+  },
+  "autoMode": {
+    "environment": [
+      "Organization: AgentOS-managed team. AI-native agent orchestration.",
+      "Source control: GitHub",
+      "Agent orchestration: AgentOS at ~/.aos/ manages persistent AI agents",
+      "Linear project management: agents interact via linear-tool CLI",
+      "Infrastructure: Execution host, tmux sessions",
+      "Trusted tools: linear-tool, gh CLI, npm, node, tsx"
+    ],
+    "allow": [
+      "Git operations including commit and branch creation are allowed",
+      "Running tests and build commands is allowed",
+      "Writing to agent memory files at .agent-memory/ and ~/.aos/ is allowed",
+      "Using linear-tool for all Linear operations is allowed",
+      "Installing npm dependencies from package.json is allowed"
+    ]
+  },
+  "trust": true
+}

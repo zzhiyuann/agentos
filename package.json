@@ -15,7 +15,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
-  "author": "Zhiyuan Wang",
+  "author": "AgentOS Contributors",
   "license": "MIT",
   "dependencies": {
     "@linear/sdk": "^78.0.0",

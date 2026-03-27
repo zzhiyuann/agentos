@@ -1,6 +1,6 @@
 /**
  * Linear client management: API clients, auth, GraphQL helper, workflow states.
- * Split from linear.ts — see RYA-117 Finding 6, RYA-142.
+ * Split from linear.ts for modularity.
  */
 
 import { LinearClient } from '@linear/sdk';

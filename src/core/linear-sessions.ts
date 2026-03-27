@@ -1,6 +1,6 @@
 /**
  * Linear AgentSession operations: create, dismiss, emit activity, manage plans.
- * Split from linear.ts — see RYA-117 Finding 6, RYA-142.
+ * Split from linear.ts for modularity.
  */
 
 import { graphql, normalizeBearerToken, getRequiredAgentToken, refreshAgentClient } from './linear-client.js';
@@ -148,7 +148,7 @@ export async function dismissAgentSession(agentSessionId: string, overrideToken?
     return;
   }
 
-  // Use '–' as minimal dismiss body for cleanup/dedup paths (RYA-103).
+  // Use '–' as minimal dismiss body for cleanup/dedup paths.
   // Meaningful dismiss messages should be provided by callers (monitor HANDOFF, idle, etc.).
   const body = reason && reason.trim() ? reason : '–';
 

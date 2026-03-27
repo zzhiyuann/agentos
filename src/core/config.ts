@@ -30,8 +30,8 @@ export function getConfig(): AosConfig {
   return {
     linearTeamId: requireEnv('AOS_LINEAR_TEAM_ID'),
     linearTeamKey: requireEnv('AOS_LINEAR_TEAM_KEY'),
-    imacHost: requireEnv('AOS_HOST'),
-    imacUser: requireEnv('AOS_USER'),
+    execHost: requireEnv('AOS_HOST'),
+    execUser: requireEnv('AOS_USER'),
     workspaceBase: process.env.AOS_WORKSPACE_BASE || '~/agent-workspaces',
     dbPath: join(STATE_DIR, 'state.db'),
     pollIntervalMs: Number(process.env.AOS_POLL_INTERVAL_MS) || 30_000,
@@ -67,7 +67,7 @@ export function resolveWorkspace(issueKey: string, projectName?: string): string
 /**
  * Get the per-issue state directory for state files (HANDOFF.md, BLOCKED.md, PROGRESS.md).
  * Separates issue state from code workspace to prevent cross-issue contamination
- * when workspace-map.json maps multiple issues to the same directory (RYA-246).
+ * when workspace-map.json maps multiple issues to the same directory.
  */
 export function getIssueStateDir(issueKey: string): string {
   const dir = join(WORK_DIR, issueKey);

@@ -238,8 +238,8 @@ describe('parseMentions', () => {
     expect(parseMentions('@lead_engineer check')).toEqual(['lead-engineer']);
   });
 
-  it('parses @ryanhub_ prefixed mentions', () => {
-    expect(parseMentions('hey @ryanhub_cto')).toEqual(['cto']);
+  it('parses plain @ mentions', () => {
+    expect(parseMentions('hey @cto')).toEqual(['cto']);
   });
 
   it('returns empty for no mentions', () => {

@@ -135,7 +135,7 @@ export async function spawnFollowUp(opts: SpawnFollowUpOptions): Promise<SpawnFo
     issue_id: issueId,
     issue_key: issueKey,
     agent_type: agentRole,
-    host: getConfig().imacHost,
+    host: getConfig().execHost,
     agent_session_id: agentSessionId,
     tmux_session: `aos-${agentRole}-${issueKey}`,
     workspace_path: workspacePath,

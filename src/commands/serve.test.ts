@@ -484,18 +484,18 @@ describe('serve - HTTP endpoints', () => {
         expect(data.agent).toBe('AgentOS');
       }
     } catch {
-      // Server might not be running on MacBook (it's on iMac now)
+      // Server might not be running locally
     }
   });
 
   it('open endpoint returns HTML page', async () => {
     try {
-      const res = await fetch('http://localhost:3848/open/RYA-1');
+      const res = await fetch('http://localhost:3848/open/ENG-1');
       if (res.ok) {
         const html = await res.text();
         expect(html).toContain('AgentOS');
-        expect(html).toContain('RYA-1');
-        expect(html).toContain('agentos://session/RYA-1');
+        expect(html).toContain('ENG-1');
+        expect(html).toContain('agentos://session/ENG-1');
       }
     } catch {
       // Server might not be running locally

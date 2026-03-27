@@ -123,7 +123,7 @@ cat ~/.aos/agents/lead-engineer/config.json
 # Change "baseModel": "codex" to "cc" or vice versa
 
 # Or override at runtime
-aos agent start lead-engineer RYA-42 --model cc
+aos agent start lead-engineer ENG-42 --model cc
 ```
 
 ## Routing
@@ -148,5 +148,5 @@ Rules are evaluated in order. First match wins.
 ### Manual Assignment
 ```bash
 # Override routing — assign specific agent
-aos agent start cpo RYA-42
+aos agent start cpo ENG-42
 ```

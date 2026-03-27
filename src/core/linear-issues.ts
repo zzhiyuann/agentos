@@ -1,6 +1,6 @@
 /**
  * Linear issue operations: CRUD, comments, labels, documents, handoff summaries.
- * Split from linear.ts — see RYA-117 Finding 6, RYA-142.
+ * Split from linear.ts for modularity.
  */
 
 import { LinearClient, Issue, LinearDocument } from '@linear/sdk';

@@ -7,7 +7,7 @@ import {
 import { getAgentLinearToken, loadAgentConfig, listAgents, loadPersona } from './core/persona.js';
 import { getConfig, resolveWorkspace } from './core/config.js';
 
-const READ_ONLY_TEST_ISSUE_KEY = process.env.AOS_INTEGRATION_READ_ISSUE_KEY || 'RYA-8';
+const READ_ONLY_TEST_ISSUE_KEY = process.env.AOS_INTEGRATION_READ_ISSUE_KEY || 'ENG-8';
 const AGENT_SESSION_TEST_ISSUE_KEY = process.env.AOS_INTEGRATION_AGENT_SESSION_ISSUE_KEY;
 const describeAgentSessionLifecycle = AGENT_SESSION_TEST_ISSUE_KEY ? describe : describe.skip;
 
@@ -103,20 +103,20 @@ describeAgentSessionLifecycle('Integration: Agent session lifecycle', () => {
 
 describe('Integration: Workspace mapping', () => {
   it('resolves AgentOS project to agentos repo', () => {
-    const workspace = resolveWorkspace('RYA-99', 'AgentOS');
+    const workspace = resolveWorkspace('ENG-99', 'AgentOS');
     expect(workspace).toContain('projects/agentos');
     expect(workspace).not.toContain('agent-workspaces');
   });
 
   it('falls back to agent-workspaces for unknown projects', () => {
-    const workspace = resolveWorkspace('RYA-99', 'UnknownProject');
+    const workspace = resolveWorkspace('ENG-99', 'UnknownProject');
     expect(workspace).toContain('agent-workspaces');
-    expect(workspace).toContain('RYA-99');
+    expect(workspace).toContain('ENG-99');
   });
 
   it('uses default workspace when no project specified', () => {
-    const workspace = resolveWorkspace('RYA-99');
-    expect(workspace).toContain('RYA-99');
+    const workspace = resolveWorkspace('ENG-99');
+    expect(workspace).toContain('ENG-99');
   });
 });
 
@@ -129,8 +129,8 @@ describe('Integration: System config consistency', () => {
 
   it('config has required host and user fields', () => {
     const config = getConfig();
-    expect(config.imacHost).toBeTruthy();
-    expect(config.imacUser).toBeTruthy();
+    expect(config.execHost).toBeTruthy();
+    expect(config.execUser).toBeTruthy();
   });
 
   it('workspace-map.json has AgentOS mapping', async () => {
@@ -147,7 +147,7 @@ describe('Integration: System config consistency', () => {
 
   it('tunnel URL is set', () => {
     const config = getConfig();
-    // Tunnel may be running on iMac now, so MacBook may not have the URL
+    // Tunnel may be running on a different host, so this machine may not have the URL
     // Just verify the field exists
     expect(typeof config.tunnelUrl).toBe('string');
   });

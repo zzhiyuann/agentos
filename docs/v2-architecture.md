@@ -80,7 +80,7 @@ Each agent type gets its own identity in Linear via OAuth:
 CREATE TABLE attempts (
   id TEXT PRIMARY KEY,
   issue_id TEXT NOT NULL,          -- Linear issue UUID
-  issue_key TEXT NOT NULL,         -- e.g., "RYA-42"
+  issue_key TEXT NOT NULL,         -- e.g., "ENG-42"
   agent_session_id TEXT,           -- Linear AgentSession UUID
   agent_type TEXT NOT NULL,        -- cc | codex | gemini
   runner_session_id TEXT,          -- CC session / Codex thread ID

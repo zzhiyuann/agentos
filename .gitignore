@@ -14,9 +14,6 @@ HANDOFF.md
 BLOCKED.md
 handoffs/
 
-# Claude Code settings (may contain personal config)
-.claude/settings.local.json
-
 # Environment & secrets
 .env
 .env.*

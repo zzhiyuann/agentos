@@ -9,7 +9,7 @@ describe('listAgents', () => {
   it('returns array of agent role names', () => {
     const agents = listAgents();
     expect(Array.isArray(agents)).toBe(true);
-    expect(agents.length).toBe(7);
+    expect(agents.length).toBe(6);
     expect(agents).toContain('ceo-office');
     expect(agents).toContain('cto');
     expect(agents).toContain('cpo');
@@ -143,33 +143,33 @@ describe('buildGroundingPrompt', () => {
 
 describe('buildTaskPrompt', () => {
   it('includes issue key and title', () => {
-    const prompt = buildTaskPrompt('cto', 'RYA-42', 'Fix the auth bug', 'Users cannot login');
-    expect(prompt).toContain('RYA-42');
+    const prompt = buildTaskPrompt('cto', 'ENG-42', 'Fix the auth bug', 'Users cannot login');
+    expect(prompt).toContain('ENG-42');
     expect(prompt).toContain('Fix the auth bug');
     expect(prompt).toContain('Users cannot login');
     expect(prompt).toContain('cto');
   });
 
   it('works without description', () => {
-    const prompt = buildTaskPrompt('cpo', 'RYA-1', 'New feature');
-    expect(prompt).toContain('RYA-1');
+    const prompt = buildTaskPrompt('cpo', 'ENG-1', 'New feature');
+    expect(prompt).toContain('ENG-1');
     expect(prompt).toContain('New feature');
   });
 });
 
 describe('buildWorkerPersona', () => {
   it('creates minimal persona for ephemeral workers', () => {
-    const persona = buildWorkerPersona('RYA-99', 'Test task', 'Do something');
+    const persona = buildWorkerPersona('ENG-99', 'Test task', 'Do something');
     expect(persona).toContain('Worker Agent');
-    expect(persona).toContain('RYA-99');
+    expect(persona).toContain('ENG-99');
     expect(persona).toContain('Test task');
     expect(persona).toContain('Do something');
     expect(persona).toContain('HANDOFF.md');
   });
 
   it('works without description', () => {
-    const persona = buildWorkerPersona('RYA-1', 'Simple task');
-    expect(persona).toContain('RYA-1');
+    const persona = buildWorkerPersona('ENG-1', 'Simple task');
+    expect(persona).toContain('ENG-1');
     expect(persona).toContain('Simple task');
   });
 });

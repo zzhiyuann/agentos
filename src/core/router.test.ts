@@ -61,7 +61,7 @@ describe('resolveAgentRole', () => {
     expect(resolveAgentRole(issue)).toBe('coo');
   });
 
-  it('routes label:qa to cto (QA absorbed per RYA-150)', () => {
+  it('routes label:qa to cto (QA absorbed into engineering)', () => {
     const issue = makeIssue(['qa']);
     expect(resolveAgentRole(issue)).toBe('cto');
   });
