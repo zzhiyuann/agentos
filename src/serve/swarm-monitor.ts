@@ -10,7 +10,7 @@
  */
 
 import chalk from 'chalk';
-import { existsSync, readFileSync, writeFileSync, readdirSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, readdirSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { SwarmStateManager, type SwarmConfig, type Experiment } from '../core/swarm-state.js';
 import { getSwarmStatus, stopSwarm, generateSwarmReport, type SwarmStatus } from '../core/swarm-coordinator.js';
@@ -91,6 +91,8 @@ function loadRegistry(): SwarmRegistryEntry[] {
 function saveRegistry(entries: SwarmRegistryEntry[]): void {
   const path = getRegistryPath();
   try {
+    const dir = join(path, '..');
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
     writeFileSync(path, JSON.stringify(entries, null, 2));
   } catch { /* best effort */ }
 }
