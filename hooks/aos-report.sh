@@ -28,7 +28,7 @@ if [[ ! "$SESSION_NAME" =~ ^aos- ]]; then
     exit 0
 fi
 
-# Extract issue key from session name (aos-RYA-42 → RYA-42)
+# Extract issue key from session name (aos-ENG-42 → ENG-42)
 ISSUE_KEY="${SESSION_NAME#aos-}"
 
 LOG_FILE="$HOME/.aos/hook.log"

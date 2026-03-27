@@ -811,8 +811,8 @@ else:
   create-doc)
     # linear-tool create-doc <issue-key> "title" <file-path-or-stdin>
     # Creates a Linear Document attached to an issue and prints the document URL.
-    # Usage: linear-tool create-doc RYA-42 "Brand Playbook" ./BRAND-PLAYBOOK.md
-    #        cat report.md | linear-tool create-doc RYA-42 "Report"
+    # Usage: linear-tool create-doc ENG-42 "Brand Playbook" ./BRAND-PLAYBOOK.md
+    #        cat report.md | linear-tool create-doc ENG-42 "Report"
     ISSUE_KEY="$2"
     DOC_TITLE="$3"
     FILE_PATH="${4:-}"
@@ -867,7 +867,7 @@ print(json.dumps({
   upload-deliverables)
     # linear-tool upload-deliverables <issue-key> <file1> [file2] [file3] ...
     # Uploads multiple files as Linear Documents and prints markdown links.
-    # Usage: linear-tool upload-deliverables RYA-42 ./PLAYBOOK.md ./CHECKLIST.md
+    # Usage: linear-tool upload-deliverables ENG-42 ./PLAYBOOK.md ./CHECKLIST.md
     ISSUE_KEY="$2"
     shift 2
     if [ -z "$ISSUE_KEY" ] || [ $# -eq 0 ]; then
