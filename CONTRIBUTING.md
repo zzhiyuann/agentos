@@ -7,14 +7,14 @@ Thanks for your interest in contributing to AgentOS! This document covers the es
 ### Prerequisites
 
 - **Node.js 22+**
-- **macOS** (Keychain integration for token storage)
+- **macOS** (Keychain integration for token storage) or **Linux** (file-based fallback)
 - **Linear workspace** with API access
 - **tmux** installed on the execution host
 
 ### Getting Started
 
 ```bash
-git clone https://github.com/zzhiyuann/agentos.git
+git clone https://github.com/agentos-sh/agentos.git
 cd agentos
 npm install
 
@@ -31,13 +31,13 @@ npm run build
 
 ### Environment Variables
 
-Required environment variables (see `.env.example`):
+Required environment variables (see `.env.example` for the full list with descriptions):
 
 | Variable | Description |
 |----------|-------------|
 | `AOS_LINEAR_TEAM_ID` | Your Linear team UUID |
 | `AOS_LINEAR_TEAM_KEY` | Your Linear team key (e.g., `ENG`) |
-| `AOS_HOST` | Execution host address |
+| `AOS_HOST` | Execution host address (`localhost` for local) |
 | `AOS_USER` | SSH username on the execution host |
 
 ## Project Structure
@@ -107,7 +107,7 @@ npm run build           # TypeScript compilation to dist/
 
 - Use imperative mood: "Add feature" not "Added feature"
 - First line under 72 characters
-- Reference issue numbers when applicable: "Fix routing bug (RYA-42)"
+- Reference issue numbers when applicable: "Fix routing bug (#42)"
 
 ## Where to Contribute
 
@@ -128,7 +128,7 @@ Smarter memory management for agents:
 - Retrieval improvements (what to recall for a given task)
 
 ### Cross-Platform Support
-AgentOS currently requires macOS for Keychain integration. Contributions to support Linux/Windows secret storage are welcome.
+AgentOS currently uses macOS Keychain for token storage with a file-based fallback for Linux. Contributions to improve Linux support or add Windows compatibility are welcome.
 
 ### Documentation
 - Tutorials and guides
@@ -141,4 +141,4 @@ Open an issue or start a discussion. We're happy to help you find a good first c
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE).

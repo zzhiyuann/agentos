@@ -125,7 +125,7 @@ You are the CTO. You own all technology decisions.
 C-suite agents run as **long-lived interactive CC sessions**:
 
 ```bash
-# CTO session (persistent tmux on iMac)
+# Agent session (persistent tmux on execution host)
 tmux new-session -s aos-cto -c ~/.aos/agents/cto/
 claude --permission-mode auto \
   --append-system-prompt "You are the CTO. Read CLAUDE.md and MEMORY.md."

@@ -20,7 +20,7 @@ A step-by-step guide to go from zero to a running AI agent team in under 15 minu
 ### Option A: From source (recommended)
 
 ```bash
-git clone https://github.com/zzhiyuann/agentos.git
+git clone https://github.com/agentos-sh/agentos.git
 cd agentos
 npm install
 npm run build
@@ -56,7 +56,7 @@ AOS_LINEAR_TEAM_ID=your-linear-team-uuid
 # Your Linear team key prefix (e.g., "ENG", "PROD" — the prefix on your issue IDs)
 AOS_LINEAR_TEAM_KEY=ENG
 
-# Where agent sessions execute ("localhost" for local, or a remote host IP)
+# Where agent sessions execute ("localhost" for local, or a remote host IP/hostname)
 AOS_HOST=localhost
 
 # Your system username (used for SSH when AOS_HOST is remote)
@@ -80,6 +80,8 @@ DISCORD_BOT_TOKEN=
 DISCORD_CHANNEL_ID=
 ```
 
+See [`.env.example`](../.env.example) for the complete list with descriptions.
+
 ### Where to find your Linear team ID
 
 1. Open [Linear](https://linear.app)
@@ -95,7 +97,7 @@ aos setup --api-key <YOUR_LINEAR_API_KEY>
 
 This will:
 1. Validate your environment variables
-2. Store your Linear API key securely (macOS Keychain or file fallback)
+2. Store your Linear API key securely (macOS Keychain or file fallback on Linux)
 3. Verify the Linear connection
 4. Initialize the SQLite state database at `~/.aos/state.db`
 5. Create agent routing labels in Linear
@@ -295,7 +297,7 @@ When an agent completes a task, it writes memory files to `~/.aos/agents/<role>/
   memory/
     architecture.md      # Decisions learned from past sessions
     codebase-patterns.md # Patterns discovered in the codebase
-    ceo-preferences.md   # How the CEO likes things done
+    preferences.md       # Learned preferences from feedback
 ```
 
 Each new session gets grounded with:
@@ -310,7 +312,7 @@ This is the **death and resurrection pattern** — sessions are disposable, but 
 For a containerized deployment:
 
 ```bash
-git clone https://github.com/zzhiyuann/agentos.git
+git clone https://github.com/agentos-sh/agentos.git
 cd agentos
 cp .env.example .env
 # Edit .env with your Linear credentials (see Step 2)
@@ -376,6 +378,24 @@ Agents can delegate work to each other using `linear-tool`:
 # linear-tool ask architect ENG-42 "Should we use a queue or direct calls?"
 ```
 
+## Remote Execution
+
+By default, AgentOS runs agent sessions locally (`AOS_HOST=localhost`). For remote execution on a separate machine:
+
+1. Set `AOS_HOST` to the remote machine's IP or hostname
+2. Set `AOS_USER` to your SSH username on that machine
+3. Ensure SSH key-based authentication is configured (no password prompt)
+4. Install tmux on the remote machine
+5. Install Claude Code (or Codex) on the remote machine
+
+AgentOS will SSH into the remote host, create tmux sessions, and run agents there. The webhook server and monitor still run locally — only agent execution is remote.
+
+```bash
+# Example .env for remote execution
+AOS_HOST=192.168.1.100
+AOS_USER=deploy
+```
+
 ## Troubleshooting
 
 ### "No API key found"
@@ -430,5 +450,4 @@ aos resume ENG-42
 - **[Architecture](architecture.md)** — Deep dive into two-plane design, session lifecycle, and data model
 - **[Agent Guide](agent-guide.md)** — Write effective agent personas
 - **[Deployment](deployment.md)** — Production setup with persistent tunnels and remote execution
-- **[Competitive Analysis](competitive-analysis.md)** — How AgentOS compares to other frameworks
 - **[Contributing](../CONTRIBUTING.md)** — Help improve AgentOS

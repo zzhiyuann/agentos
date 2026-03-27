@@ -28,18 +28,18 @@ graph TB
         direction TB
         WH["Webhook Server<br/>:3848 via cloudflared"]
         RE["Routing Engine<br/>routing.json"]
-        PQ["Priority Queue<br/>CTO > CPO > COO > Lead > Research"]
+        PQ["Priority Queue<br/>configurable per-agent"]
         BG["Budget Gates<br/>per-agent, per-task, daily"]
         PL["Persona Loader<br/>CLAUDE.md + memory/*"]
         SM["Session Monitor<br/>15s artifact polling"]
         DB[("SQLite<br/>attempts + events")]
     end
 
-    subgraph Runtime["Execution Plane — iMac via SSH"]
+    subgraph Runtime["Execution Plane — local or remote via SSH"]
         direction TB
-        T1["tmux: aos-cto"]
-        T2["tmux: aos-cpo"]
-        T3["tmux: aos-lead-engineer"]
+        T1["tmux: aos-architect"]
+        T2["tmux: aos-engineer"]
+        T3["tmux: aos-researcher"]
         TN["tmux: aos-{issue}-{n}"]
         W1["Workspace<br/>HANDOFF.md · BLOCKED.md"]
     end
@@ -125,7 +125,7 @@ graph LR
     end
 
     subgraph Memory["Persistent Memory Layer"]
-        PM["~/.aos/agents/cto/memory/"]
+        PM["~/.aos/agents/{role}/memory/"]
         P1["architecture.md"]
         P2["decisions.md"]
         P3["ceo-preferences.md"]
@@ -162,29 +162,29 @@ Agents collaborate through Linear, not direct process communication.
 
 ```mermaid
 sequenceDiagram
-    participant CEO as CEO (Human)
-    participant CTO as CTO Agent
-    participant LE as Lead Engineer
-    participant CPO as CPO Agent
+    participant You as You (Human)
+    participant Arch as Architect Agent
+    participant Eng as Engineer
+    participant QA as QA Agent
 
-    CEO->>CTO: Create issue: "Refactor auth module"
-    activate CTO
-    CTO->>CTO: Analyze architecture
-    CTO->>CTO: Write technical spec
-    CTO->>LE: dispatch: "Implement per spec"
-    activate LE
-    CTO->>CPO: ask: "Any UX implications?"
-    activate CPO
-    CPO-->>CTO: "Yes — session tokens affect logout flow"
-    deactivate CPO
-    CTO->>CTO: Update spec with UX notes
-    LE->>LE: Implement changes
-    LE->>LE: Write tests
-    LE->>CTO: handoff: "Implementation complete"
-    deactivate LE
-    CTO->>CTO: Review + verify
-    CTO->>CEO: HANDOFF.md: "Auth refactored, 42 tests pass"
-    deactivate CTO
+    You->>Arch: Create issue: "Refactor auth module"
+    activate Arch
+    Arch->>Arch: Analyze architecture
+    Arch->>Arch: Write technical spec
+    Arch->>Eng: dispatch: "Implement per spec"
+    activate Eng
+    Arch->>QA: ask: "Any test coverage gaps?"
+    activate QA
+    QA-->>Arch: "Yes — session token refresh path untested"
+    deactivate QA
+    Arch->>Arch: Update spec with test notes
+    Eng->>Eng: Implement changes
+    Eng->>Eng: Write tests
+    Eng->>Arch: handoff: "Implementation complete"
+    deactivate Eng
+    Arch->>Arch: Review + verify
+    Arch->>You: HANDOFF.md: "Auth refactored, 42 tests pass"
+    deactivate Arch
 ```
 
 **Three delegation modes:**
@@ -206,7 +206,7 @@ sequenceDiagram
 CREATE TABLE attempts (
     id TEXT PRIMARY KEY,
     issue_id TEXT NOT NULL,           -- Linear issue UUID
-    issue_key TEXT NOT NULL,          -- "RYA-42"
+    issue_key TEXT NOT NULL,          -- e.g., "ENG-42"
     agent_session_id TEXT,            -- Linear AgentSession UUID
     agent_type TEXT NOT NULL,         -- cto, cpo, lead-engineer, etc.
     runner_session_id TEXT,           -- CC session / Codex thread ID
@@ -236,14 +236,14 @@ CREATE TABLE events (
 ### Agent Identity Model
 
 ```
-~/.aos/agents/cto/
+~/.aos/agents/{role}/
 ├── CLAUDE.md              # Persona: role, authority, communication standards
 ├── MEMORY.md              # Index of all memory files
 ├── config.json            # { baseModel: "cc", linearClientId: "..." }
 ├── .oauth-token           # Linear OAuth bearer token
 └── memory/
     ├── architecture.md    # Technical decisions + rationale
-    ├── ceo-preferences.md # How the CEO likes to work
+    ├── preferences.md    # How the team likes to work
     ├── tech-debt.md       # Known issues, priorities
     └── ...                # Grows across sessions
 ```
@@ -320,10 +320,10 @@ Issues flow through a configurable rule set:
 ```json
 {
   "rules": [
-    { "label": "agent:cto",  "agent": "cto" },
-    { "label": "agent:cpo",  "agent": "cpo" },
-    { "project": "Feature Roadmap", "agent": "cpo" },
-    { "default": true, "agent": "lead-engineer" }
+    { "label": "agent:architect",  "agent": "architect" },
+    { "label": "agent:engineer",  "agent": "engineer" },
+    { "project": "Feature Roadmap", "agent": "engineer" },
+    { "default": true, "agent": "engineer" }
   ]
 }
 ```
@@ -334,9 +334,34 @@ Rules are evaluated top-to-bottom. First match wins. Labels take priority over p
 
 ## Infrastructure
 
+AgentOS supports both single-machine and split-machine deployments.
+
+### Single Machine (simplest)
+
+```
+┌────────────────────────────────┐
+│   Your Machine                  │
+│                                 │
+│  AgentOS server (:3848)         │
+│  SQLite state (~/.aos/state.db) │
+│  cloudflared tunnel             │
+│  tmux sessions (local)          │
+│  Agent workspaces               │
+│  Claude Code / Codex            │
+└────────────────────────────────┘
+         ▲
+         │ webhook
+┌────────┴──────────┐
+│  Linear Cloud      │
+│  (control plane)   │
+└───────────────────┘
+```
+
+### Split Machine (remote execution)
+
 ```
 ┌─────────────────────┐        ┌──────────────────────┐
-│   MacBook (control)  │        │   iMac (execution)    │
+│  Control Machine     │        │  Execution Host       │
 │                      │  SSH   │                       │
 │  AgentOS server      │───────▶│  tmux sessions        │
 │  SQLite state        │        │  Agent workspaces     │
@@ -352,7 +377,7 @@ Rules are evaluated top-to-bottom. First match wins. Labels take priority over p
 └───────────────────┘
 ```
 
-**Network:** Tailscale mesh between MacBook and iMac. Cloudflare tunnel exposes webhook server to Linear.
+**Network:** Any SSH-accessible network between control and execution hosts. Cloudflare tunnel exposes webhook server to Linear.
 
 ---
 

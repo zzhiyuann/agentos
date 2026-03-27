@@ -148,7 +148,7 @@ Events (via CC hooks):
   Stop        → AgentActivity(response) + plan update
 
 Workspace:
-  ~/agent-workspaces/{issue-key}/ on iMac
+  ~/agent-workspaces/{issue-key}/ on execution host
   HANDOFF.md → Linear Issue Document
 ```
 

@@ -9,9 +9,9 @@ Turn [Linear](https://linear.app) into the control plane for a team of AI agents
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org)
 [![Node.js 22+](https://img.shields.io/badge/node-22%2B-green.svg)](https://nodejs.org)
-[![Tests](https://img.shields.io/badge/tests-460%2B%20passing-brightgreen.svg)](#testing)
+[![Tests](https://img.shields.io/badge/tests-500%2B%20passing-brightgreen.svg)](#testing)
 
-*11,000+ lines of TypeScript · 460+ tests · 5 runtime dependencies*
+*13,000+ lines of TypeScript · 500+ tests · 5 runtime dependencies*
 
 </div>
 
@@ -25,32 +25,35 @@ Turn [Linear](https://linear.app) into the control plane for a team of AI agents
 
 AI coding tools give you a single, amnesiac assistant. It forgets everything between sessions. You paste context, re-explain decisions, and micromanage every task. Scale that to a real workload and you're spending more time managing AI than doing high-leverage work.
 
-**AgentOS takes a different approach.** Instead of a tool you prompt, you get a team you manage. Five AI executives — CTO, CPO, COO, Lead Engineer, Research Lead — each with their own identity, memory, and authority. You create a Linear issue, and the right agent picks it up, works autonomously, delegates to others, and reports back. Sessions are ephemeral. Memory is permanent.
+**AgentOS takes a different approach.** Instead of a tool you prompt, you get a team you manage. Define AI agents — each with their own identity, memory, and authority. You create a Linear issue, and the right agent picks it up, works autonomously, delegates to others, and reports back. Sessions are ephemeral. Memory is permanent.
 
-> You make the high-leverage calls. Your AI C-suite runs the rest.
+> You define the roles. Agents run the rest.
 
 ## How It Works
 
+Define any team structure that fits your needs:
+
 ```
-You (CEO)
+You
  │
- ├── CTO ········ Architecture, code quality, tech decisions
- ├── CPO ········ Product vision, features, user research
- ├── COO ········ Ops, infrastructure, cost management
- ├── Lead Eng ··· Hands-on implementation
- └── Research ··· AI research, experiments, analysis
+ ├── Architect ···· Architecture, code quality, tech decisions
+ ├── Engineer ····· Hands-on implementation
+ ├── Researcher ·· Analysis, experiments, data
+ └── QA ·········· Testing, verification
 ```
+
+Roles are just directories with a persona file — create as many or as few as you want.
 
 **The workflow:**
 
 1. **Create a Linear issue** — "Refactor the auth module"
-2. **AgentOS routes it** — label `agent:cto` → CTO picks it up
+2. **AgentOS routes it** — label `agent:architect` → Architect picks it up
 3. **Agent works autonomously** — spawns in a tmux session with full persona + memory
-4. **Agent delegates** — CTO dispatches Lead Engineer for implementation
+4. **Agent delegates** — Architect dispatches Engineer for implementation
 5. **Work completes** — agent writes `HANDOFF.md`, Linear updates automatically
 6. **Memory persists** — what they learned carries to the next session
 
-Watch any agent work in real-time: `aos jump RYA-42` opens their terminal.
+Watch any agent work in real-time: `aos jump ENG-42` opens their terminal.
 
 ## Architecture
 
@@ -87,7 +90,7 @@ graph TB
     Webhook --> Router
     Router --> Personas
     Personas --> CC & Codex
-    CC & Codex -->|SSH + tmux| tmux
+    CC & Codex -->|"local or SSH + tmux"| tmux
     tmux --> WS
     Monitor -->|poll artifacts| WS
     Monitor -->|"report completion"| Activities
@@ -103,8 +106,8 @@ graph TB
 | **File-based completion signals** | `HANDOFF.md` on disk is more reliable than parsing agent output. Monitor polls every 15s. |
 | **Memory > sessions** | Sessions die. Memory survives. Each spawn is grounded with persona + accumulated knowledge. No context window bloat. |
 | **Adapter abstraction** | `RunnerAdapter` interface lets you swap Claude Code ↔ Codex per agent, per task, or on retry. |
-| **OAuth per agent** | Each agent has its own Linear OAuth token. When CTO comments, it shows as "CTO" — not you. |
-| **Priority queue** | CTO (1) > CPO (2) > COO (3) > Lead (4) > Research (5). Strategic thinking gets resources first. |
+| **OAuth per agent** | Each agent has its own Linear OAuth token. When Architect comments, it shows as "Architect" — not you. |
+| **Priority queue** | Configurable per-agent priority. Strategic agents get resources first. |
 
 ## Features
 
@@ -112,27 +115,27 @@ graph TB
 The defining architectural pattern. Agent sessions are disposable — kill one, and a new instance spawns with full institutional knowledge compiled from `memory/*` files. No context window limits. No state corruption. The agent "dies and resurrects" as a fresh process grounded with everything it has ever learned.
 
 ### Agent-to-Agent Delegation
-Agents dispatch work to each other via Linear. CTO can hand off implementation to Lead Engineer. CPO can dispatch Research Lead for analysis. Three delegation modes:
+Agents dispatch work to each other via Linear. Architect can hand off implementation to Engineer. Three delegation modes:
 
 ```bash
 # Direct dispatch — start another agent on an issue
-linear-tool dispatch lead-engineer RYA-42 "Implement the auth refactor per CTO spec"
+linear-tool dispatch engineer ENG-42 "Implement the auth refactor per spec"
 
 # Handoff — finish your part, they pick up your workspace
-linear-tool handoff cpo RYA-42 "Technical design complete, need product review"
+linear-tool handoff qa ENG-42 "Implementation complete, needs testing"
 
 # Ask — async question, they respond when available
-linear-tool ask cto RYA-42 "Should we use JWT or session tokens?"
+linear-tool ask architect ENG-42 "Should we use JWT or session tokens?"
 ```
 
 ### Observable Execution
-Every agent runs in a tmux session. `aos jump RYA-42` opens a terminal window directly into the agent's workspace. No black boxes.
+Every agent runs in a tmux session. `aos jump ENG-42` opens a terminal window directly into the agent's workspace. No black boxes.
 
 ```bash
 aos status                    # What's running?
-aos jump RYA-42               # Attach to agent's terminal
-aos agent memory cto          # What does CTO remember?
-aos logs RYA-42               # Full event history
+aos jump ENG-42               # Attach to agent's terminal
+aos agent memory architect    # What does Architect remember?
+aos logs ENG-42               # Full event history
 ```
 
 ### Multi-Model Runtime
@@ -148,7 +151,7 @@ interface RunnerAdapter {
 ```
 
 ### Budget & Rate Limiting
-Per-agent, per-attempt, and daily spending caps. Priority-based queue ensures strategic agents (CTO, CPO) get resources before tactical ones. Automatic cooldown with backoff on rate limits.
+Per-agent, per-attempt, and daily spending caps. Priority-based queue ensures high-priority agents get resources first. Automatic cooldown with backoff on rate limits.
 
 ### Persistent Identity
 Each agent has:
@@ -180,15 +183,15 @@ Each agent has:
 
 ### Prerequisites
 - Node.js 22+
-- macOS (Keychain integration) or Linux
+- macOS or Linux
 - tmux on the execution host
 - A [Linear](https://linear.app) workspace with API key
-- [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) for webhook tunnel (production)
+- [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) for webhook tunnel (optional — polling mode available)
 
 ### Install
 
 ```bash
-git clone https://github.com/zzhiyuann/agentos.git
+git clone https://github.com/agentos-sh/agentos.git
 cd agentos
 cp .env.example .env    # Configure your environment
 npm install && npm run build && npm link
@@ -197,23 +200,23 @@ npm install && npm run build && npm link
 ### Docker (alternative)
 
 ```bash
-git clone https://github.com/zzhiyuann/agentos.git
+git clone https://github.com/agentos-sh/agentos.git
 cd agentos
 cp .env.example .env    # Configure your environment (see below)
-docker compose up -d    # Starts webhook server + tunnel
+docker compose up -d    # Starts webhook server
 ```
 
-The Docker setup includes the webhook server, cloudflared tunnel, and persistent state. See [Docker setup details](docs/GETTING-STARTED.md#docker-setup) for full configuration.
+The Docker setup includes the webhook server and persistent state. See [Docker setup details](docs/GETTING-STARTED.md#docker-setup) for full configuration.
 
 ### Configure
 
-Edit `.env` with your Linear team details (see `.env.example`), then:
+Edit `.env` with your Linear team details (see [`.env.example`](.env.example) for all options), then:
 
 ```bash
 # Validate config and initialize database
 aos setup --api-key <YOUR_LINEAR_API_KEY>
 
-# Set up OAuth for agent identities
+# Set up OAuth for agent identities (optional but recommended)
 aos auth --client-id <OAUTH_CLIENT_ID> --client-secret <OAUTH_SECRET>
 ```
 
@@ -224,13 +227,15 @@ aos auth --client-id <OAUTH_CLIENT_ID> --client-secret <OAUTH_SECRET>
 aos serve
 
 # Or start an agent manually
-aos agent start cto RYA-42
+aos agent start engineer ENG-42
 
 # Watch what's happening
 aos status
-aos jump RYA-42
-aos agent memory cto
+aos jump ENG-42
+aos agent memory engineer
 ```
+
+For the full walkthrough, see **[docs/GETTING-STARTED.md](docs/GETTING-STARTED.md)**.
 
 ## CLI Reference
 
@@ -244,7 +249,7 @@ aos agent memory <role>            # View knowledge
 
 # Task operations
 aos spawn <issue>                  # Ephemeral agent on issue
-aos batch RYA-1 RYA-2 RYA-3       # Batch spawn
+aos batch ENG-1 ENG-2 ENG-3       # Batch spawn
 aos status [--all]                 # Active sessions
 aos jump <issue>                   # Attach to terminal
 aos kill <issue> [--done]          # Terminate session
@@ -270,39 +275,44 @@ src/
 ├── core/
 │   ├── linear.ts          # Linear API — dual client (personal + OAuth)
 │   ├── db.ts              # SQLite state management
-│   ├── tmux.ts            # Remote SSH + tmux session control
+│   ├── tmux.ts            # SSH + tmux session control
 │   ├── persona.ts         # Agent identity & memory loader
 │   ├── router.ts          # Issue → agent routing
 │   ├── queue.ts           # Priority-based job queue
 │   ├── budget.ts          # Spending limits enforcement
 │   └── oauth.ts           # Token management (Keychain + file)
 ├── commands/
-│   ├── serve.ts           # Webhook server + session monitor (2,300 LOC)
+│   ├── serve.ts           # Webhook server + session monitor
 │   ├── agent.ts           # agent list/start/stop/talk/memory
 │   ├── spawn.ts           # Ephemeral agent spawning
 │   └── ...                # status, jump, kill, watch, queue
+├── serve/
+│   ├── webhook.ts         # Linear webhook event handler
+│   ├── monitor.ts         # Session monitor (HANDOFF.md polling)
+│   ├── scheduler.ts       # Job scheduling & auto-dispatch
+│   ├── dispatch.ts        # Agent dispatch logic
+│   └── ...                # classify, comments, dashboard, helpers
 └── adapters/
     ├── types.ts           # RunnerAdapter interface
     ├── claude-code.ts     # Claude Code adapter
     └── codex.ts           # Codex adapter
 
 docs/
+├── GETTING-STARTED.md     # Step-by-step setup guide
 ├── architecture.md        # System design & data flow
-├── competitive-analysis.md # 9+ framework comparison
-├── agent-guide.md         # How to work as an agent
-├── quickstart.md          # Setup guide
-└── ...
+├── agent-guide.md         # Creating custom agents
+└── deployment.md          # Production deployment
 ```
 
 ## Testing
 
 ```bash
-npm test                   # 460+ passing tests
+npm test                   # 500+ passing tests
 npm run test:watch         # Watch mode
 npm run test:coverage      # Coverage report
 ```
 
-Test coverage spans webhook event classification, routing logic, priority queue, database operations, and adapter behavior.
+Test coverage spans webhook event classification, routing logic, priority queue, database operations, adapter behavior, and session monitoring.
 
 ## Development
 
@@ -324,8 +334,8 @@ npx tsx src/cli.ts status --all
 - **Language:** TypeScript 5.9 (strict mode)
 - **State:** SQLite via better-sqlite3
 - **API:** Linear GraphQL (Agent Platform APIs: AgentSession, AgentActivity)
-- **Execution:** SSH + tmux on remote host, Cloudflare tunnel for webhooks
-- **Auth:** macOS Keychain with file fallback, OAuth2 client_credentials per agent
+- **Execution:** tmux sessions, local or remote via SSH
+- **Auth:** macOS Keychain with file fallback, OAuth2 per agent
 - **Dependencies:** 5 runtime (`@linear/sdk`, `better-sqlite3`, `chalk`, `commander`, `discord.js`)
 
 ## Contributing
@@ -340,4 +350,4 @@ Areas where help is especially valuable:
 
 ## License
 
-MIT
+[MIT](LICENSE)

@@ -15,7 +15,7 @@ Get from zero to running AI agents in under 10 minutes.
 ## Step 1: Install
 
 ```bash
-git clone https://github.com/zzhiyuann/agentos.git
+git clone https://github.com/agentos-sh/agentos.git
 cd agentos
 npm install && npm run build && npm link
 ```
