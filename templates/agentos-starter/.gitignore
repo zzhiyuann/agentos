@@ -1,0 +1,29 @@
+# Secrets & local state
+.env
+.env.local
+*.log
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# AgentOS runtime state (user-level — lives at ~/.aos/, but just in case)
+.aos/
+state.db
+state.db-journal
+state.db-wal
+state.db-shm
+tunnel-url
+tunnel.log
+serve.log
+serve.stdout.log
+serve.stderr.log
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp

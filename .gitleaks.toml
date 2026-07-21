@@ -1,0 +1,9 @@
+# gitleaks configuration for AgentOS
+# See: https://github.com/gitleaks/gitleaks
+
+[allowlist]
+description = "Known safe values"
+regexes = [
+  # Claude Code's public OAuth client ID (same for all users, not a secret)
+  "9d1c250a-e61b-44d9-88ed-5944d1962f5e",
+]

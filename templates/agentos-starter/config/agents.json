@@ -1,0 +1,17 @@
+{
+  "_comment": "Adapter registry. Each entry defines a runnable backend (model runtime). Agent roles (cto, cpo, ...) pick an adapter via their config.json baseModel field. Installed into ~/.aos/agents.json.",
+  "cc": {
+    "label": "agent:cc",
+    "command": "claude --permission-mode auto",
+    "host": "localhost",
+    "capabilities": ["code", "review", "docs", "debug", "refactor"],
+    "maxConcurrent": 4
+  },
+  "codex": {
+    "label": "agent:codex",
+    "command": "codex --dangerously-bypass-approvals-and-sandbox",
+    "host": "localhost",
+    "capabilities": ["code", "refactor", "fix", "implement"],
+    "maxConcurrent": 4
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Per-role budget caps. Forward-compatible schema (enforcement is planned). The monitor records per-attempt cost; future releases will block spawns when a role exceeds its cap. For now this file is advisory.",
+  "schemaVersion": 1,
+  "currency": "USD",
+  "window": "rolling-7d",
+  "roles": {
+    "cto":             { "dailyCapUsd": 25, "weeklyCapUsd": 120, "warnAtPct": 80 },
+    "cpo":             { "dailyCapUsd": 25, "weeklyCapUsd": 120, "warnAtPct": 80 },
+    "coo":             { "dailyCapUsd": 25, "weeklyCapUsd": 120, "warnAtPct": 80 },
+    "lead-engineer":   { "dailyCapUsd": 40, "weeklyCapUsd": 200, "warnAtPct": 80 },
+    "research-lead":   { "dailyCapUsd": 20, "weeklyCapUsd": 100, "warnAtPct": 80 },
+    "_default":        { "dailyCapUsd": 15, "weeklyCapUsd":  75, "warnAtPct": 80 }
+  },
+  "onExceed": "queue",
+  "onWarn":   "discord"
+}

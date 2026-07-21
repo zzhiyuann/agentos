@@ -1,0 +1,17 @@
+{
+  "_comment": "Label/project → agent role routing rules. Evaluated top-down: labels first, then projects, then default. Installed by `scripts/apply-config.sh` into ~/.aos/routing.json.",
+  "rules": [
+    { "label": "agent:cto",           "agent": "cto" },
+    { "label": "agent:cpo",           "agent": "cpo" },
+    { "label": "agent:coo",           "agent": "coo" },
+    { "label": "agent:lead-engineer", "agent": "lead-engineer" },
+    { "label": "agent:research-lead", "agent": "research-lead" },
+
+    { "label": "infra",        "agent": "coo" },
+    { "label": "architecture", "agent": "cto" },
+    { "label": "research",     "agent": "research-lead" },
+    { "label": "product",      "agent": "cpo" },
+
+    { "default": true, "agent": "lead-engineer" }
+  ]
+}

@@ -1,0 +1,88 @@
+# Example: Agent regression test using AgentOS replay
+#
+# This workflow shows how to pin a regression test to a known-good captured
+# trace, then re-run the agent on every prompt / CLAUDE.md change to catch
+# behavioral regressions before they ship.
+#
+# Setup (one-time):
+#   1. Run an agent on a representative task to completion.
+#   2. Capture the baseline:    aos replay capture <issue-key> -o tests/replays/baseline-RYA-XXX.jsonl
+#   3. Commit the baseline trace to your repo as the golden reference.
+#   4. Copy this file to .github/workflows/replay-regression.yml and edit the matrix.
+#
+# On every PR, this job:
+#   1. Re-runs the agent on the same task in headless mode.
+#   2. Captures a new trace.
+#   3. Asserts the new trace matches the baseline on tool-sequence + file-state + exit-code.
+#   4. Fails the PR if the agent's behavior diverged.
+
+name: Agent Regression
+
+on:
+  pull_request:
+    paths:
+      # Only re-run when prompts, agent grounding, or replay code change
+      - '~/.aos/agents/**/CLAUDE.md'
+      - 'src/commands/replay*.ts'
+      - '.github/workflows/replay-regression.yml'
+
+jobs:
+  replay-regression:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # One row per pinned regression case — add as you build a fixture library
+        case:
+          - { issue: 'RYA-844', baseline: 'tests/replays/baseline-RYA-844.jsonl' }
+          # - { issue: 'RYA-855', baseline: 'tests/replays/baseline-RYA-855.jsonl' }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build AgentOS
+        run: npm run build
+
+      - name: Re-run agent on pinned task
+        # Replace with your actual headless-agent invocation.
+        # The agent must:
+        #   (1) read its prompt from your repo (so PR changes are exercised),
+        #   (2) write its workspace + state to a known location,
+        #   (3) exit non-zero on hard failure.
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AOS_LINEAR_TEAM_KEY: CI
+        run: |
+          ./dist/cli.js agent start lead-engineer ${{ matrix.case.issue }} --model cc
+
+      - name: Capture new trace
+        run: |
+          mkdir -p out
+          ./dist/cli.js replay capture ${{ matrix.case.issue }} \
+            -o out/new-${{ matrix.case.issue }}.jsonl
+
+      - name: Assert no behavioral regression
+        # Three assertions, all must pass:
+        #   tool-sequence  — exact ordered tool calls match baseline
+        #   file-state     — final HANDOFF.md / PROGRESS.md sha256 match baseline
+        #   exit-code      — meta.status == baseline.status (e.g., "completed")
+        run: |
+          ./dist/cli.js replay test out/new-${{ matrix.case.issue }}.jsonl \
+            --baseline ${{ matrix.case.baseline }} \
+            --assert tool-sequence,file-state,exit-code
+
+      - name: Upload diverged trace on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diverged-${{ matrix.case.issue }}
+          path: out/new-${{ matrix.case.issue }}.jsonl

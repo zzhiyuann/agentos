@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# uninstall-serve-launchd.sh — Stop and remove the AgentOS serve launchd plist.
+#
+set -euo pipefail
+
+PLIST_NAME="com.agentos.serve"
+PLIST_DST="$HOME/Library/LaunchAgents/$PLIST_NAME.plist"
+
+if launchctl list "$PLIST_NAME" &>/dev/null; then
+    echo "Unloading $PLIST_NAME..."
+    launchctl unload "$PLIST_DST"
+    sleep 2
+    echo "Unloaded."
+else
+    echo "$PLIST_NAME is not loaded."
+fi
+
+if [ -f "$PLIST_DST" ]; then
+    rm "$PLIST_DST"
+    echo "Removed $PLIST_DST"
+fi
+
+echo "Done. Serve will no longer auto-start."

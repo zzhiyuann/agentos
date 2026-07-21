@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# install-serve-launchd.sh — Install and load the AgentOS serve launchd plist
+# for project {{PROJECT_NAME}}.
+#
+# Usage: bash scripts/install-serve-launchd.sh
+#
+set -euo pipefail
+
+PLIST_NAME="com.{{PROJECT_NAME}}.agentos.serve"
+PLIST_SRC="$(dirname "$0")/com.agentos.serve.plist"
+PLIST_DST="$HOME/Library/LaunchAgents/$PLIST_NAME.plist"
+LOG_DIR="$HOME/.aos/logs"
+SERVE_PORT="{{SERVE_PORT}}"
+
+mkdir -p "$LOG_DIR"
+
+# Stop existing service if loaded
+if launchctl list "$PLIST_NAME" &>/dev/null; then
+    echo "Stopping existing $PLIST_NAME..."
+    launchctl unload "$PLIST_DST" 2>/dev/null || true
+    sleep 2
+fi
+
+# Kill any leftover serve process on our port
+if lsof -ti ":$SERVE_PORT" &>/dev/null; then
+    echo "Killing leftover process on port $SERVE_PORT..."
+    lsof -ti ":$SERVE_PORT" | xargs kill -9 2>/dev/null || true
+    sleep 1
+fi
+
+cp "$PLIST_SRC" "$PLIST_DST"
+echo "Installed plist to $PLIST_DST"
+
+launchctl load "$PLIST_DST"
+echo "Loaded $PLIST_NAME"
+
+sleep 3
+if launchctl list "$PLIST_NAME" &>/dev/null; then
+    echo "Service is running."
+    echo "Logs: $LOG_DIR/serve-launchd.{stdout,stderr}.log"
+else
+    echo "WARNING: Service may not have started. Check logs."
+fi

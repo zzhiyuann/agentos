@@ -1,0 +1,27 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AgentOS company repo for {{ORG_NAME}}",
+  "type": "module",
+  "scripts": {
+    "serve": "aos serve",
+    "serve:loop": "bash scripts/serve-loop.sh",
+    "tunnel": "bash scripts/tunnel-quick.sh",
+    "setup": "aos setup",
+    "status": "aos status --all",
+    "install:launchd": "bash scripts/install-serve-launchd.sh",
+    "uninstall:launchd": "bash scripts/uninstall-serve-launchd.sh",
+    "install:tunnel-launchd": "bash scripts/tunnel-install-launchd.sh",
+    "apply:config": "bash scripts/apply-config.sh"
+  },
+  "dependencies": {
+    "agentos": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "agentosTemplate": {
+    "version": "0.1.0"
+  }
+}

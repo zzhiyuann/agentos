@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.{{PROJECT_NAME}}.agentos.serve</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>{{PROJECT_DIR}}/scripts/serve-loop.sh</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>{{PROJECT_DIR}}</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>{{HOME}}/.aos/logs/serve-launchd.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{HOME}}/.aos/logs/serve-launchd.stderr.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:{{HOME}}/.local/bin:{{HOME}}/.npm-global/bin</string>
+        <key>HOME</key>
+        <string>{{HOME}}</string>
+        <key>AOS_LINEAR_TEAM_ID</key>
+        <string>{{LINEAR_TEAM_ID}}</string>
+        <key>AOS_LINEAR_TEAM_KEY</key>
+        <string>{{LINEAR_TEAM_KEY}}</string>
+        <key>AOS_HOST</key>
+        <string>localhost</string>
+        <key>AOS_USER</key>
+        <string>{{USER}}</string>
+        <key>AOS_WORKSPACE_BASE</key>
+        <string>{{WORKSPACE_BASE}}</string>
+        <key>AOS_POLL_INTERVAL_MS</key>
+        <string>{{POLL_INTERVAL_MS}}</string>
+        <key>AOS_ORG_NAME</key>
+        <string>{{ORG_NAME}}</string>
+    </dict>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+</dict>
+</plist>
